@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -215,8 +215,13 @@ import { Product, Order, PaymentSettings } from '../../core/models';
             <!-- Orders -->
             <div class="orders-section">
               <h2>Pedidos</h2>
-              <div class="orders-grid">
-                @for (order of orders(); track order.id) {
+              @if (isLoading()) {
+                <p>Cargando pedidos...</p>
+              } @else if (orders().length === 0) {
+                <p>No hay pedidos aún</p>
+              } @else {
+                <div class="orders-grid">
+                  @for (order of orders(); track order.id) {
                   <div class="order-card">
                     <div class="order-header">
                       <span class="order-id">#{{ order.id.slice(0, 8).toUpperCase() }}</span>
@@ -263,6 +268,7 @@ import { Product, Order, PaymentSettings } from '../../core/models';
                   </div>
                 }
               </div>
+              }
             </div>
           }
 
@@ -730,6 +736,7 @@ export class AdminComponent implements OnInit {
 
   orders = signal<Order[]>([]);
   products = signal<Product[]>([]);
+  isLoading = signal(false);
   totalSales = signal(0);
   topProducts = signal<{product_name: string; total_sold: number}[]>([]);
 
@@ -763,12 +770,23 @@ export class AdminComponent implements OnInit {
 
   paymentSettingsForm = signal<PaymentSettings | null>(null);
 
+  constructor() {
+    // Reactively load data when authentication state changes
+    effect(() => {
+      if (this.isAuthenticated()) {
+        this.loadData();
+        this.loadHeroSlides();
+        this.loadPaymentSettings();
+      } else {
+        // Clear data when not authenticated
+        this.orders.set([]);
+        this.products.set([]);
+      }
+    });
+  }
+
   async ngOnInit() {
-    if (this.auth.isAuthenticated()) {
-      await this.loadData();
-      await this.loadHeroSlides();
-      await this.loadPaymentSettings();
-    }
+    // effect handles the initial and subsequent loads
   }
 
   async login() {
@@ -786,14 +804,15 @@ export class AdminComponent implements OnInit {
   }
 
   async loadData() {
+    this.isLoading.set(true);
     try {
       console.log('Loading orders...');
       const orders = await this.supabase.getOrders();
-      console.log('Orders loaded:', orders);
+      console.log('Orders loaded:', orders.length, 'orders');
       
       console.log('Loading products...');
       const products = await this.supabase.getProducts();
-      console.log('Products loaded:', products);
+      console.log('Products loaded:', products.length, 'products');
       
       const sales = await this.supabase.getTotalSales();
       const top = await this.supabase.getTopProducts();
@@ -804,7 +823,8 @@ export class AdminComponent implements OnInit {
       this.topProducts.set(top);
     } catch (error: any) {
       console.error('Error loading data:', error);
-      alert('Error cargando datos: ' + (error?.message || error));
+    } finally {
+      this.isLoading.set(false);
     }
   }
 

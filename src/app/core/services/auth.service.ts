@@ -1,11 +1,13 @@
-import { Injectable, signal, computed, effect, WritableSignal } from '@angular/core';
+import { Injectable, signal, computed, effect, WritableSignal, inject } from '@angular/core';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import { CartItem, Product } from '../models';
+import { SupabaseService } from './supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private supabaseService = inject(SupabaseService);
   private client: SupabaseClient;
   private userSignal: WritableSignal<User | null> = signal<User | null>(null);
   
@@ -13,10 +15,7 @@ export class AuthService {
   readonly isAuthenticated = computed(() => !!this.userSignal());
 
   constructor() {
-    this.client = createClient(
-      'https://lpooruluvctjaqrexsee.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxwb29ydWx1dmN0amFxcmV4c2VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1OTIzMDgsImV4cCI6MjA4OTE2ODMwOH0.GbT-TAS3t84kTd17hGHOZLcyWL07DdPSMgbfQGrWHsg'
-    );
+    this.client = this.supabaseService.supabase;
     
     this.client.auth.onAuthStateChange((event, session) => {
       this.userSignal.set(session?.user ?? null);
