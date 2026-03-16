@@ -1,12 +1,29 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { FooterComponent } from './shared/components/footer/footer.component';
+import { ToastComponent } from './shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  standalone: true,
+  imports: [RouterOutlet, NavbarComponent, FooterComponent, ToastComponent],
+  template: `
+    <app-navbar />
+    <router-outlet />
+    <app-toast />
+    <app-footer />
+  `,
+  styles: [`
+    :host {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    router-outlet + * {
+      flex: 1;
+    }
+  `]
 })
-export class App {
-  protected readonly title = signal('tienda_reposteria');
-}
+export class App {}
