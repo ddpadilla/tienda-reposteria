@@ -52,10 +52,12 @@ import { Product } from '../../../core/models';
       overflow: hidden;
       box-shadow: var(--shadow-sm);
       transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+      position: relative;
     }
 
-    .product-card:hover {
-      transform: translateY(-4px);
+    .product-card:hover,
+    .product-card:focus-within {
+      transform: translateY(-6px);
       box-shadow: var(--shadow-lg);
     }
 
@@ -77,7 +79,8 @@ import { Product } from '../../../core/models';
       transition: transform var(--transition-slow);
     }
 
-    .product-card:hover .product-image img {
+    .product-card:hover .product-image img,
+    .product-card:focus-within .product-image img {
       transform: scale(1.05);
     }
 
@@ -100,6 +103,7 @@ import { Product } from '../../../core/models';
       text-transform: uppercase;
       letter-spacing: 0.5px;
       border-radius: var(--border-radius-sm);
+      z-index: 2;
     }
 
     .product-badge.agotado {
@@ -120,10 +124,20 @@ import { Product } from '../../../core/models';
 
     .product-name a {
       color: var(--color-brown);
+      text-decoration: none;
     }
 
-    .product-name a:hover {
+    .product-name a::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .product-name a:hover,
+    .product-name a:focus-visible {
       color: var(--color-gold);
+      outline: none;
     }
 
     .product-price {
@@ -137,6 +151,8 @@ import { Product } from '../../../core/models';
       width: 100%;
       padding: var(--spacing-sm) var(--spacing-md);
       font-size: 0.85rem;
+      position: relative;
+      z-index: 2;
     }
 
     .add-to-cart:disabled {

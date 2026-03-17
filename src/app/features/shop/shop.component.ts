@@ -25,46 +25,50 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
             <div class="filter-section">
               <h3>Categorías</h3>
               <div class="filter-options">
-                <label class="filter-option">
+                <div class="filter-option">
                   <input 
                     type="radio" 
+                    id="cat-all"
                     name="category" 
                     value=""
                     [(ngModel)]="selectedCategory"
                     (change)="filterProducts()"
                   >
-                  <span>Todos</span>
-                </label>
-                <label class="filter-option">
+                  <label for="cat-all">Todos</label>
+                </div>
+                <div class="filter-option">
                   <input 
                     type="radio" 
+                    id="cat-cups"
                     name="category" 
                     value="cups"
                     [(ngModel)]="selectedCategory"
                     (change)="filterProducts()"
                   >
-                  <span>Cups</span>
-                </label>
-                <label class="filter-option">
+                  <label for="cat-cups">Cups</label>
+                </div>
+                <div class="filter-option">
                   <input 
                     type="radio" 
+                    id="cat-mini-cakes"
                     name="category" 
                     value="mini-cakes"
                     [(ngModel)]="selectedCategory"
                     (change)="filterProducts()"
                   >
-                  <span>Mini Cakes</span>
-                </label>
-                <label class="filter-option">
+                  <label for="cat-mini-cakes">Mini Cakes</label>
+                </div>
+                <div class="filter-option">
                   <input 
                     type="radio" 
+                    id="cat-molds"
                     name="category" 
                     value="molds"
                     [(ngModel)]="selectedCategory"
                     (change)="filterProducts()"
                   >
-                  <span>Molds</span>
-                </label>
+                  <label for="cat-molds">Molds</label>
+                </div>
               </div>
             </div>
 
@@ -165,11 +169,18 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
       display: flex;
       align-items: center;
       gap: var(--spacing-sm);
+    }
+
+    .filter-option label {
       cursor: pointer;
+      width: 100%;
     }
 
     .filter-option input {
       accent-color: var(--color-gold);
+      cursor: pointer;
+      width: 1.2rem;
+      height: 1.2rem;
     }
 
     .price-range {
@@ -181,6 +192,7 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
     .price-range input[type="range"] {
       width: 100%;
       accent-color: var(--color-gold);
+      cursor: pointer;
     }
 
     .price-label {

@@ -67,15 +67,15 @@ import { RouterLink } from '@angular/router';
   `,
   styles: [`
     .footer {
-      background: var(--color-brown);
-      color: var(--color-cream);
-      margin-top: var(--spacing-3xl);
+      background: var(--color-accent); /* Rojo Brillante */
+      color: var(--color-white);
+      margin-top: var(--spacing-xl);
     }
 
     .footer-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: var(--spacing-3xl) var(--spacing-md);
+      padding: var(--spacing-xl) var(--spacing-md);
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: var(--spacing-xl);
@@ -83,26 +83,30 @@ import { RouterLink } from '@angular/router';
 
     .footer-logo {
       font-family: var(--font-serif);
-      font-size: 1.5rem;
-      color: var(--color-gold);
+      font-size: 1.75rem;
+      color: var(--color-white);
       margin-bottom: var(--spacing-sm);
+      font-weight: 700;
     }
 
     .footer-tagline {
       font-style: italic;
-      opacity: 0.8;
+      opacity: 0.9;
     }
 
     .footer-links h4,
     .footer-contact h4,
     .footer-social h4 {
       font-family: var(--font-sans);
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: var(--spacing-md);
-      color: var(--color-gold);
+      color: var(--color-white);
+      border-bottom: 2px solid var(--color-secondary);
+      display: inline-block;
+      padding-bottom: 4px;
     }
 
     .footer-links ul {
@@ -114,18 +118,20 @@ import { RouterLink } from '@angular/router';
     }
 
     .footer-links a {
-      color: var(--color-cream);
-      opacity: 0.8;
-      transition: opacity var(--transition-fast);
+      color: rgba(255, 255, 255, 0.85);
+      transition: transform var(--transition), color var(--transition);
+      text-decoration: none;
+      display: inline-block;
     }
 
-    .footer-links a:hover {
-      opacity: 1;
-      color: var(--color-gold);
+    .footer-links a:hover,
+    .footer-links a:focus-visible {
+      color: var(--color-white);
+      transform: translateX(6px);
     }
 
     .footer-contact p {
-      opacity: 0.8;
+      opacity: 0.9;
       margin-bottom: var(--spacing-xs);
     }
 
@@ -138,20 +144,22 @@ import { RouterLink } from '@angular/router';
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: var(--border-radius-full);
-      color: var(--color-cream);
-      transition: all var(--transition-fast);
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: var(--border-radius-md);
+      color: var(--color-white);
+      transition: var(--transition);
     }
 
     .social-links a:hover {
-      background: var(--color-gold);
-      transform: translateY(-2px);
+      background: var(--color-white);
+      color: var(--color-accent);
+      transform: translateY(-5px);
     }
 
     .footer-bottom {
+      background: var(--color-secondary); /* Granate */
       border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
@@ -168,7 +176,7 @@ import { RouterLink } from '@angular/router';
 
     .footer-bottom p {
       font-size: 0.85rem;
-      opacity: 0.7;
+      opacity: 0.8;
     }
 
     .footer-legal {
@@ -178,12 +186,14 @@ import { RouterLink } from '@angular/router';
 
     .footer-legal a {
       font-size: 0.85rem;
-      color: var(--color-cream);
-      opacity: 0.7;
+      color: var(--color-white);
+      opacity: 0.8;
+      text-decoration: none;
     }
 
     .footer-legal a:hover {
       opacity: 1;
+      text-decoration: underline;
     }
 
     @media (max-width: 768px) {

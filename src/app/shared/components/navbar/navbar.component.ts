@@ -53,11 +53,11 @@ import { CartService } from '../../../core/services/cart.service';
     .navbar {
       position: sticky;
       top: 0;
-      background: var(--color-cream);
-      border-bottom: 1px solid var(--color-rose-pastel);
-      z-index: 1000;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
+      background: var(--color-accent); /* Rojo Brillante */
+      border-bottom: 2px solid var(--color-secondary);
+      z-index: var(--z-sticky);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      color: var(--color-white);
     }
 
     .nav-cart.bump, .floating-cart.bump {
@@ -71,19 +71,19 @@ import { CartService } from '../../../core/services/cart.service';
       right: 30px;
       width: 64px;
       height: 64px;
-      background: var(--color-gold);
+      background: var(--color-secondary);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      z-index: 999;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      z-index: var(--z-floating);
       transition: transform 0.3s ease, background 0.3s ease;
       text-decoration: none;
     }
 
     .floating-cart:hover {
-      background: var(--color-brown);
+      background: var(--color-text);
       transform: translateY(-5px);
     }
 
@@ -91,8 +91,8 @@ import { CartService } from '../../../core/services/cart.service';
       position: absolute;
       top: -5px;
       right: -5px;
-      background: var(--color-brown);
-      color: white;
+      background: var(--color-white);
+      color: var(--color-accent);
       width: 24px;
       height: 24px;
       border-radius: 50%;
@@ -101,7 +101,7 @@ import { CartService } from '../../../core/services/cart.service';
       justify-content: center;
       font-size: 0.8rem;
       font-weight: 700;
-      border: 2px solid white;
+      border: 2px solid var(--color-accent);
     }
 
     @keyframes bump {
@@ -112,14 +112,14 @@ import { CartService } from '../../../core/services/cart.service';
     }
 
     .navbar.scrolled {
-      background: rgba(253, 248, 243, 0.95);
-      box-shadow: 0 2px 20px rgba(61, 44, 44, 0.1);
+      background: var(--color-secondary); /* Granate al hacer scroll */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
     .nav-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: var(--spacing-md);
+      padding: var(--spacing-sm) var(--spacing-md);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -128,10 +128,11 @@ import { CartService } from '../../../core/services/cart.service';
     .nav-logo {
       display: flex;
       align-items: center;
+      filter: brightness(0) invert(1); /* Logo blanco para contraste */
     }
 
     .nav-logo img {
-      height: 80px;
+      height: 60px;
       width: auto;
     }
 
@@ -142,22 +143,25 @@ import { CartService } from '../../../core/services/cart.service';
     }
 
     .nav-menu a {
-      font-size: 1.45rem;
-      font-weight: 400;
+      color: var(--color-white);
+      font-size: 1.1rem;
+      font-weight: 600;
       letter-spacing: 0.5px;
       position: relative;
       padding: var(--spacing-xs) 0;
+      text-decoration: none;
+      border-radius: var(--border-radius-sm);
     }
 
     .nav-menu a::after {
       content: '';
       position: absolute;
-      bottom: 0;
+      bottom: -4px;
       left: 0;
       width: 0;
-      height: 1px;
-      background: var(--color-gold);
-      transition: width var(--transition-normal);
+      height: 2px;
+      background: var(--color-white);
+      transition: width var(--transition);
     }
 
     .nav-menu a:hover::after,
@@ -173,11 +177,12 @@ import { CartService } from '../../../core/services/cart.service';
       width: 44px;
       height: 44px;
       border-radius: var(--border-radius-full);
-      transition: background var(--transition-fast);
+      color: var(--color-white);
+      transition: background var(--transition);
     }
 
     .nav-cart:hover {
-      background: var(--color-rose-pastel);
+      background: rgba(255, 255, 255, 0.2);
     }
 
     .cart-count {
@@ -186,10 +191,10 @@ import { CartService } from '../../../core/services/cart.service';
       right: 2px;
       width: 18px;
       height: 18px;
-      background: var(--color-gold);
-      color: white;
+      background: var(--color-white);
+      color: var(--color-accent);
       font-size: 0.7rem;
-      font-weight: 600;
+      font-weight: 700;
       border-radius: var(--border-radius-full);
       display: flex;
       align-items: center;
@@ -200,15 +205,20 @@ import { CartService } from '../../../core/services/cart.service';
       display: none;
       width: 44px;
       height: 44px;
+      padding: var(--spacing-sm);
       align-items: center;
       justify-content: center;
+      color: var(--color-white);
+      background: transparent;
+      border: none;
+      cursor: pointer;
     }
 
     .hamburger {
       display: block;
       width: 24px;
       height: 2px;
-      background: var(--color-brown);
+      background: currentColor;
       position: relative;
     }
 
@@ -218,7 +228,7 @@ import { CartService } from '../../../core/services/cart.service';
       position: absolute;
       width: 24px;
       height: 2px;
-      background: var(--color-brown);
+      background: currentColor;
       left: 0;
     }
 
@@ -236,10 +246,10 @@ import { CartService } from '../../../core/services/cart.service';
         left: 0;
         right: 0;
         flex-direction: column;
-        background: var(--color-cream);
+        background: var(--color-accent);
         padding: var(--spacing-lg);
         gap: var(--spacing-md);
-        border-bottom: 1px solid var(--color-rose-pastel);
+        border-bottom: 2px solid var(--color-secondary);
         display: none;
       }
 

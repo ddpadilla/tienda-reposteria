@@ -45,11 +45,13 @@ import { DecimalPipe } from '@angular/common';
                     <button 
                       class="qty-btn"
                       (click)="cartService.updateQuantity(item.product.id, item.quantity - 1)"
+                      aria-label="Disminuir cantidad"
                     >−</button>
-                    <span>{{ item.quantity }}</span>
+                    <span class="qty-display" aria-label="Cantidad actual">{{ item.quantity }}</span>
                     <button 
                       class="qty-btn"
                       (click)="cartService.updateQuantity(item.product.id, item.quantity + 1)"
+                      aria-label="Aumentar cantidad"
                     >+</button>
                   </div>
 
@@ -89,7 +91,7 @@ import { DecimalPipe } from '@angular/common';
                 <span>L {{ cartService.totalHNL() | number:'1.2-2' }}</span>
               </div>
 
-              <a routerLink="/checkout" class="btn btn-gold checkout-btn">
+              <a routerLink="/checkout" class="btn btn-primary checkout-btn">
                 Proceder al Checkout
               </a>
 
@@ -184,18 +186,33 @@ import { DecimalPipe } from '@angular/common';
     }
 
     .qty-btn {
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       border: 1px solid var(--color-rose-dark);
       border-radius: var(--border-radius-sm);
-      transition: all var(--transition-fast);
+      background: var(--color-white);
+      color: var(--color-brown);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
     }
 
     .qty-btn:hover {
       background: var(--color-rose-pastel);
+      border-color: var(--color-brown-light);
+    }
+
+    .qty-btn:active {
+      transform: scale(0.95);
+    }
+    
+    .qty-display {
+      min-width: 24px;
+      text-align: center;
+      font-weight: 600;
     }
 
     .item-total {
@@ -205,11 +222,18 @@ import { DecimalPipe } from '@angular/common';
     }
 
     .remove-btn {
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       font-size: 1.5rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
       color: var(--color-gray);
-      transition: color var(--transition-fast);
+      transition: color 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--border-radius-sm);
     }
 
     .remove-btn:hover {
@@ -252,6 +276,8 @@ import { DecimalPipe } from '@angular/common';
       width: 100%;
       margin-top: var(--spacing-lg);
       padding: var(--spacing-md);
+      text-align: center;
+      justify-content: center;
     }
 
     .clear-cart {

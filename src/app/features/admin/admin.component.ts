@@ -569,6 +569,8 @@ import { Product, Order, PaymentSettings } from '../../core/models';
 
     .product-form h3 {
       margin-bottom: var(--spacing-md);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 1px solid var(--color-cream-dark);
     }
 
     .form-row {
@@ -577,10 +579,46 @@ import { Product, Order, PaymentSettings } from '../../core/models';
       gap: var(--spacing-md);
     }
 
+    .form-group {
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-weight: 600;
+      margin-bottom: var(--spacing-xs);
+      color: var(--color-brown);
+      font-size: 0.95rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.8rem var(--spacing-sm);
+      border: 1px solid var(--color-cream-dark);
+      border-radius: var(--border-radius-sm);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      background-color: var(--color-white);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-gold);
+      box-shadow: 0 0 0 3px var(--color-gold-light);
+    }
+
+    textarea.form-input {
+      resize: vertical;
+      min-height: 80px;
+    }
+
     .form-actions {
       display: flex;
       gap: var(--spacing-md);
       justify-content: flex-end;
+      margin-top: var(--spacing-md);
     }
 
     .data-table {

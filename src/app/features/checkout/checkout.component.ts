@@ -27,13 +27,20 @@ declare var paypal: any;
           <div class="checkout-layout">
             <!-- Formulario -->
             <div class="checkout-form">
+              @if (formError()) {
+                <div class="alert alert-error" role="alert">
+                  {{ formError() }}
+                </div>
+              }
+
               <section class="form-section">
                 <h2>Información de Contacto</h2>
                 
                 <div class="form-group">
-                  <label class="form-label">Nombre Completo *</label>
+                  <label class="form-label" for="customer-name">Nombre Completo *</label>
                   <input 
                     type="text" 
+                    id="customer-name"
                     class="form-input"
                     [class.error]="submitted() && getFieldError('name')"
                     [(ngModel)]="customer.name"
@@ -46,9 +53,10 @@ declare var paypal: any;
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Correo Electrónico *</label>
+                  <label class="form-label" for="customer-email">Correo Electrónico *</label>
                   <input 
                     type="email" 
+                    id="customer-email"
                     class="form-input"
                     [class.error]="submitted() && getEmailError()"
                     [(ngModel)]="customer.email"
@@ -61,9 +69,10 @@ declare var paypal: any;
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Teléfono *</label>
+                  <label class="form-label" for="customer-phone">Teléfono *</label>
                   <input 
                     type="tel" 
+                    id="customer-phone"
                     class="form-input"
                     [class.error]="submitted() && getPhoneError()"
                     [(ngModel)]="customer.phone"
@@ -76,9 +85,10 @@ declare var paypal: any;
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Dirección de Entrega (San Pedro Sula) *</label>
+                  <label class="form-label" for="customer-address">Dirección de Entrega (San Pedro Sula) *</label>
                   <input 
                     type="text" 
+                    id="customer-address"
                     class="form-input"
                     [class.error]="submitted() && getFieldError('address')"
                     [(ngModel)]="customer.address"
@@ -91,8 +101,9 @@ declare var paypal: any;
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Notas del Pedido</label>
+                  <label class="form-label" for="order-notes">Notas del Pedido</label>
                   <textarea 
+                    id="order-notes"
                     class="form-input"
                     [(ngModel)]="notes"
                     rows="3"
@@ -105,35 +116,41 @@ declare var paypal: any;
                 <h2>Método de Pago</h2>
                 
                 <div class="payment-options">
-                  <label class="payment-option" [class.selected]="paymentMethod() === 'paypal'">
+                  <div class="payment-option" [class.selected]="paymentMethod() === 'paypal'">
                     <input 
                       type="radio" 
+                      id="payment-paypal"
                       name="payment" 
                       value="paypal"
                       [(ngModel)]="paymentMethodValue"
                       (change)="paymentMethod.set('paypal')"
                     >
-                    <div class="payment-content">
+                    <label for="payment-paypal" class="payment-content">
                       <span class="payment-icon">💳</span>
-                      <span class="payment-title">PayPal</span>
-                      <span class="payment-desc">Pago seguro con PayPal</span>
-                    </div>
-                  </label>
+                      <div class="payment-text">
+                        <span class="payment-title">PayPal</span>
+                        <span class="payment-desc">Pago seguro con PayPal</span>
+                      </div>
+                    </label>
+                  </div>
 
-                  <label class="payment-option" [class.selected]="paymentMethod() === 'transferencia'">
+                  <div class="payment-option" [class.selected]="paymentMethod() === 'transferencia'">
                     <input 
                       type="radio" 
+                      id="payment-transfer"
                       name="payment" 
                       value="transferencia"
                       [(ngModel)]="paymentMethodValue"
                       (change)="paymentMethod.set('transferencia')"
                     >
-                    <div class="payment-content">
+                    <label for="payment-transfer" class="payment-content">
                       <span class="payment-icon">🏦</span>
-                      <span class="payment-title">Transferencia/Depósito</span>
-                      <span class="payment-desc">Paga el 50% de anticipo</span>
-                    </div>
-                  </label>
+                      <div class="payment-text">
+                        <span class="payment-title">Transferencia/Depósito</span>
+                        <span class="payment-desc">Paga el 50% de anticipo</span>
+                      </div>
+                    </label>
+                  </div>
                 </div>
 
                 @if (paymentMethod() === 'transferencia') {
@@ -164,7 +181,7 @@ declare var paypal: any;
                     }
 
                     <button 
-                      class="btn btn-gold confirm-btn"
+                      class="btn btn-primary confirm-btn"
                       [disabled]="!isFormValid() || isProcessing()"
                       (click)="confirmTransfer()"
                     >
@@ -258,7 +275,50 @@ declare var paypal: any;
       font-size: 1.25rem;
       margin-bottom: var(--spacing-lg);
       padding-bottom: var(--spacing-sm);
-      border-bottom: 1px solid var(--color-rose-pastel);
+      border-bottom: 1px solid var(--color-cream-dark);
+    }
+
+    .alert {
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      margin-bottom: var(--spacing-lg);
+      font-weight: 600;
+    }
+
+    .alert-error {
+      background-color: var(--color-rose-pastel);
+      color: var(--color-error);
+      border: 1px solid var(--color-error);
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-weight: 600;
+      margin-bottom: var(--spacing-xs);
+      color: var(--color-brown);
+      font-size: 0.95rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.8rem var(--spacing-sm);
+      border: 1px solid var(--color-cream-dark);
+      border-radius: var(--border-radius-sm);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      background-color: var(--color-white);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-gold);
+      box-shadow: 0 0 0 3px var(--color-gold-light);
     }
 
     textarea.form-input {
@@ -267,12 +327,16 @@ declare var paypal: any;
     }
 
     .form-input.error {
-      border-color: #DC2626;
-      background-color: #FEF2F2;
+      border-color: var(--color-error);
+      background-color: var(--color-rose-pastel);
+    }
+
+    .form-input.error:focus {
+      box-shadow: 0 0 0 3px var(--color-rose-pastel);
     }
 
     .error-text {
-      color: #DC2626;
+      color: var(--color-error);
       font-size: 0.85rem;
       margin-top: var(--spacing-xs);
       display: block;
@@ -288,13 +352,12 @@ declare var paypal: any;
 
     .payment-option {
       display: flex;
-      align-items: center;
       padding: var(--spacing-md);
       background: var(--color-white);
-      border: 2px solid var(--color-rose-pastel);
+      border: 2px solid var(--color-cream-dark);
       border-radius: var(--border-radius-md);
-      cursor: pointer;
       transition: all var(--transition-fast);
+      position: relative;
     }
 
     .payment-option:hover {
@@ -306,14 +369,24 @@ declare var paypal: any;
       background: var(--color-cream);
     }
 
-    .payment-option input {
-      display: none;
+    .payment-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
 
     .payment-content {
       display: flex;
       align-items: center;
       gap: var(--spacing-md);
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .payment-text {
+      display: flex;
+      flex-direction: column;
     }
 
     .payment-icon {
@@ -322,6 +395,7 @@ declare var paypal: any;
 
     .payment-title {
       font-weight: 600;
+      color: var(--color-brown);
     }
 
     .payment-desc {
@@ -339,6 +413,7 @@ declare var paypal: any;
     .transfer-instructions h3 {
       font-size: 1rem;
       margin-bottom: var(--spacing-md);
+      color: var(--color-brown);
     }
 
     .transfer-instructions p {
@@ -361,6 +436,7 @@ declare var paypal: any;
     .bank-info h4 {
       font-size: 0.9rem;
       margin-bottom: var(--spacing-sm);
+      color: var(--color-brown);
     }
 
     .bank-info p {
@@ -370,19 +446,23 @@ declare var paypal: any;
     .custom-instructions {
       margin-top: var(--spacing-md);
       padding: var(--spacing-md);
-      background: #F5EDE6;
+      background: var(--color-cream);
       border-radius: var(--border-radius-md);
+      border: 1px solid var(--color-cream-dark);
     }
 
     .remaining-note {
       font-style: italic;
-      color: #6B5B5B;
+      color: var(--color-brown-light);
       margin-top: var(--spacing-md);
     }
 
     .confirm-btn {
       width: 100%;
       margin-top: var(--spacing-md);
+      padding: var(--spacing-md);
+      text-align: center;
+      justify-content: center;
     }
 
     .paypal-placeholder {
@@ -394,10 +474,11 @@ declare var paypal: any;
     .paypal-error {
       text-align: center;
       padding: var(--spacing-lg);
-      background: #FEE2E2;
+      background: var(--color-rose-pastel);
       border-radius: var(--border-radius-md);
-      color: #991B1B;
+      color: var(--color-error);
       margin-top: var(--spacing-md);
+      border: 1px solid var(--color-error);
     }
 
     #paypal-button-container {
@@ -484,6 +565,7 @@ export class CheckoutComponent implements OnInit {
   isProcessing = signal(false);
   paypalLoaded = signal(false);
   submitted = signal(false);
+  formError = signal<string | null>(null);
   paymentSettings = signal<PaymentSettings | null>(null);
 
   environment = environment;
@@ -544,8 +626,9 @@ export class CheckoutComponent implements OnInit {
       },
       onApprove: async (data: any, actions: any) => {
         this.submitted.set(true);
+        this.formError.set(null);
         if (!this.isFormValid() || this.getEmailError() || this.getPhoneError()) {
-          alert('Por favor completa todos los campos correctamente');
+          this.formError.set('Por favor completa todos los campos del formulario correctamente antes de pagar.');
           return;
         }
         this.isProcessing.set(true);
@@ -560,6 +643,7 @@ export class CheckoutComponent implements OnInit {
       onError: (err: any) => {
         console.error('PayPal error:', err);
         this.isProcessing.set(false);
+        this.formError.set('Ocurrió un error con PayPal. Intenta de nuevo.');
       }
     }).render('#paypal-button-container');
   }
@@ -596,7 +680,11 @@ export class CheckoutComponent implements OnInit {
 
   async confirmTransfer() {
     this.submitted.set(true);
-    if (!this.isFormValid() || this.getEmailError() || this.getPhoneError()) return;
+    this.formError.set(null);
+    if (!this.isFormValid() || this.getEmailError() || this.getPhoneError()) {
+      this.formError.set('Por favor completa todos los campos del formulario correctamente.');
+      return;
+    }
     
     this.isProcessing.set(true);
     try {
@@ -679,8 +767,8 @@ export class CheckoutComponent implements OnInit {
     } catch (error: any) {
       console.error('Error creating order:', error);
       this.isProcessing.set(false);
-      const errorMsg = error?.message || error?.error?.message || JSON.stringify(error) || 'Error desconocido';
-      alert('Error al crear el pedido: ' + errorMsg);
+      const errorMsg = error?.message || error?.error?.message || 'Error desconocido';
+      this.formError.set('Error al crear el pedido: ' + errorMsg);
     }
   }
 }
