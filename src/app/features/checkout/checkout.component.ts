@@ -115,90 +115,98 @@ declare var paypal: any;
               <section class="form-section">
                 <h2>Método de Pago</h2>
                 
-                <div class="payment-options">
-                  <div class="payment-option" [class.selected]="paymentMethod() === 'paypal'">
-                    <input 
-                      type="radio" 
-                      id="payment-paypal"
-                      name="payment" 
-                      value="paypal"
-                      [(ngModel)]="paymentMethodValue"
-                      (change)="paymentMethod.set('paypal')"
-                    >
-                    <label for="payment-paypal" class="payment-content">
-                      <span class="payment-icon">💳</span>
-                      <div class="payment-text">
-                        <span class="payment-title">PayPal</span>
-                        <span class="payment-desc">Pago seguro con PayPal</span>
-                      </div>
-                    </label>
+                @if (!isFormValid()) {
+                  <div class="form-warning-pill">
+                    ⚠️ Completa tus datos de contacto y dirección para habilitar el pago.
+                  </div>
+                }
+
+                <div [class.pending-form]="!isFormValid()">
+                  <div class="payment-options">
+                    <div class="payment-option" [class.selected]="paymentMethod() === 'paypal'">
+                      <input 
+                        type="radio" 
+                        id="payment-paypal"
+                        name="payment" 
+                        value="paypal"
+                        [(ngModel)]="paymentMethodValue"
+                        (change)="paymentMethod.set('paypal')"
+                      >
+                      <label for="payment-paypal" class="payment-content">
+                        <span class="payment-icon">💳</span>
+                        <div class="payment-text">
+                          <span class="payment-title">PayPal</span>
+                          <span class="payment-desc">Pago seguro con PayPal</span>
+                        </div>
+                      </label>
+                    </div>
+
+                    <div class="payment-option" [class.selected]="paymentMethod() === 'transferencia'">
+                      <input 
+                        type="radio" 
+                        id="payment-transfer"
+                        name="payment" 
+                        value="transferencia"
+                        [(ngModel)]="paymentMethodValue"
+                        (change)="paymentMethod.set('transferencia')"
+                      >
+                      <label for="payment-transfer" class="payment-content">
+                        <span class="payment-icon">🏦</span>
+                        <div class="payment-text">
+                          <span class="payment-title">Transferencia/Depósito Bancario</span>
+                        </div>
+                      </label>
+                    </div>
                   </div>
 
-                  <div class="payment-option" [class.selected]="paymentMethod() === 'transferencia'">
-                    <input 
-                      type="radio" 
-                      id="payment-transfer"
-                      name="payment" 
-                      value="transferencia"
-                      [(ngModel)]="paymentMethodValue"
-                      (change)="paymentMethod.set('transferencia')"
-                    >
-                    <label for="payment-transfer" class="payment-content">
-                      <span class="payment-icon">🏦</span>
-                      <div class="payment-text">
-                        <span class="payment-title">Transferencia/Depósito Bancario</span>
-                      </div>
-                    </label>
-                  </div>
+                  @if (paymentMethod() === 'transferencia') {
+                    <div class="transfer-instructions">
+                      <h3>Instrucciones de Pago</h3>
+                      @if (paymentSettings(); as settings) {
+                        <p>1. Realiza tu transferencia o deposito por la cantidad de <strong> (L {{ (cartService.totalHNL() ) | number:'1.2-2' }})</strong> mientras preparamos tu pedido</p>
+                        <p>2. Envía el comprobante por:</p>
+                        <ul>
+                          <li>WhatsApp: {{ settings.whatsapp }}</li>
+                          <li>Email: {{ settings.email }}</li>
+                        </ul>
+                        
+                        <div class="bank-info">
+                          <h4>Datos Bancarios:</h4>
+                          <p><strong>Banco:</strong> {{ settings.bank_name }}</p>
+                          <p><strong>Cuenta:</strong> {{ settings.account_number }}</p>
+                          <p><strong>Beneficiario:</strong> {{ settings.account_holder }}</p>
+                        </div>
+                      } @else {
+                        <p>Cargando información de pago...</p>
+                      }
+
+                      <button 
+                        class="btn btn-primary confirm-btn"
+                        [disabled]="!isFormValid() || isProcessing()"
+                        (click)="confirmTransfer()"
+                      >
+                        {{ isProcessing() ? 'Procesando...' : 'Confirmar Pedido' }}
+                      </button>
+                    </div>
+                  }
+
+                  @if (paymentMethod() === 'paypal') {
+                    <div class="paypal-container-wrapper">
+                      @if (!paypalLoaded()) {
+                        <div class="paypal-placeholder">
+                          <p>Cargando PayPal...</p>
+                        </div>
+                      }
+                      <div id="paypal-button-container"></div>
+                      @if (paypalLoaded() === false) {
+                        <div class="paypal-error">
+                          <p>Error al cargar PayPal. Por favor intenta con otro método de pago.</p>
+                        </div>
+                      }
+                    </div>
+                  }
                 </div>
-
-                @if (paymentMethod() === 'transferencia') {
-                  <div class="transfer-instructions">
-                    <h3>Instrucciones de Pago</h3>
-                    @if (paymentSettings(); as settings) {
-                      <p>1. Realiza tu transferencia o deposito por la cantidad de <strong> (L {{ (cartService.totalHNL() ) | number:'1.2-2' }})</strong> mientras preparamos tu pedido</p>
-                      <p>2. Envía el comprobante por:</p>
-                      <ul>
-                        <li>WhatsApp: {{ settings.whatsapp }}</li>
-                        <li>Email: {{ settings.email }}</li>
-                      </ul>
-                      
-                      <div class="bank-info">
-                        <h4>Datos Bancarios:</h4>
-                        <p><strong>Banco:</strong> {{ settings.bank_name }}</p>
-                        <p><strong>Cuenta:</strong> {{ settings.account_number }}</p>
-                        <p><strong>Beneficiario:</strong> {{ settings.account_holder }}</p>
-                      </div>
-
-                     
-                    } @else {
-                      <p>Cargando información de pago...</p>
-                    }
-
-                    <button 
-                      class="btn btn-primary confirm-btn"
-                      [disabled]="!isFormValid() || isProcessing()"
-                      (click)="confirmTransfer()"
-                    >
-                      {{ isProcessing() ? 'Procesando...' : 'Confirmar Pedido (Anticipo)' }}
-                    </button>
-                  </div>
-                }
               </section>
-
-              @if (paymentMethod() === 'paypal') {
-                @if (!paypalLoaded()) {
-                  <div class="paypal-placeholder">
-                    <p>Cargando PayPal...</p>
-                  </div>
-                }
-                <div id="paypal-button-container"></div>
-                @if (paypalLoaded() === false) {
-                  <div class="paypal-error">
-                    <p>Error al cargar PayPal. Por favor intenta con otro método de pago o contactanos.</p>
-                  </div>
-                }
-              }
             </div>
 
             <!-- Resumen -->
@@ -335,6 +343,25 @@ declare var paypal: any;
       font-size: 0.85rem;
       margin-top: var(--spacing-xs);
       display: block;
+    }
+
+    .form-warning-pill {
+      background: #FFFBEB;
+      border: 1px solid #F59E0B;
+      color: #92400E;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .pending-form {
+      opacity: 0.6;
+      pointer-events: none;
     }
 
     /* Payment Options */
@@ -611,6 +638,14 @@ export class CheckoutComponent implements OnInit {
         shape: 'rect',
         label: 'paypal'
       },
+      onClick: (data: any, actions: any) => {
+        this.submitted.set(true);
+        if (!this.isFormValid()) {
+          this.formError.set('Por favor completa todos los campos del formulario antes de proceder al pago.');
+          return actions.reject();
+        }
+        return actions.resolve();
+      },
       createOrder: (data: any, actions: any) => {
         return actions.order.create({
           purchase_units: [{
@@ -620,12 +655,7 @@ export class CheckoutComponent implements OnInit {
         });
       },
       onApprove: async (data: any, actions: any) => {
-        this.submitted.set(true);
         this.formError.set(null);
-        if (!this.isFormValid() || this.getEmailError() || this.getPhoneError()) {
-          this.formError.set('Por favor completa todos los campos del formulario correctamente antes de pagar.');
-          return;
-        }
         this.isProcessing.set(true);
         try {
           const orderId = data.orderID;
@@ -644,8 +674,10 @@ export class CheckoutComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    return !!(this.customer.name && this.customer.email && 
-             this.customer.phone && this.customer.address);
+    return !!(this.customer.name && 
+             this.customer.email && !this.getEmailError() &&
+             this.customer.phone && !this.getPhoneError() &&
+             this.customer.address);
   }
 
   getEmailError(): string {
