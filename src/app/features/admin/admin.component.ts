@@ -235,35 +235,21 @@ import { Product, Order, PaymentSettings } from '../../core/models';
                         <p>{{ order.delivery_address }}</p>
                       }
                       <p class="order-total">Total: L {{ order.total_hnl | number:'1.2-2' }}</p>
-                      @if (order.payment_method === 'transferencia') {
-                        <p class="payment-info">
-                          <span class="label">Pago:</span> 
-                          @if (order.advance_paid) {
-                            <span class="advance-paid">Anticipo: L {{ order.advance_amount_hnl | number:'1.2-2' }} ✓</span>
-                          } @else {
-                            <span class="advance-pending">Pendiente</span>
-                          }
-                        </p>
-                      }
+                      
                     </div>
                     <div class="order-actions">
-                      @if (order.payment_method === 'transferencia' && !order.advance_paid && order.status === 'pendiente_pago') {
-                        <button class="btn btn-success btn-sm" (click)="markAdvanceReceived(order)">
-                          ✓ Marcar Anticipo Recibido
+                      <div class="status-update-container">
+                        <select #statusSelect class="form-input" [value]="order.status">
+                          <option value="pendiente_pago">Pendiente de Pago</option>
+                          <option value="pagado_total">Pagado Total</option>
+                          @if (order.status !== 'pendiente_pago' && order.status !== 'pagado_total') {
+                            <option [value]="order.status">{{ getStatusLabel(order.status) }} (Actual)</option>
+                          }
+                        </select>
+                        <button class="btn btn-primary btn-sm" (click)="updateOrderStatus(order.id, statusSelect.value)">
+                          Confirmar
                         </button>
-                      }
-                      @if (order.advance_paid && order.status !== 'pagado_total' && order.status !== 'entregado') {
-                        <button class="btn btn-primary btn-sm" (click)="updateOrderStatus(order.id, 'pagado_total')">
-                          ✓ Marcar Pagado Total
-                        </button>
-                      }
-                      <select class="form-input" [value]="order.status" (change)="updateOrderStatus(order.id, $any($event.target).value)">
-                        <option value="pendiente_pago">Pendiente de Pago</option>
-                        <option value="anticipo_recibido">Anticipo Recibido</option>
-                        <option value="pagado_total">Pagado Total</option>
-                        <option value="en_preparacion">En Preparación</option>
-                        <option value="entregado">Entregado</option>
-                      </select>
+                      </div>
                     </div>
                   </div>
                 }
@@ -515,6 +501,18 @@ import { Product, Order, PaymentSettings } from '../../core/models';
 
     .order-actions select {
       width: 100%;
+    }
+
+    .status-update-container {
+      display: flex;
+      gap: var(--spacing-xs);
+      margin-top: var(--spacing-sm);
+    }
+    .status-update-container select {
+      flex: 1;
+    }
+    .status-update-container .btn {
+      white-space: nowrap;
     }
 
     .btn-sm {
@@ -1006,8 +1004,15 @@ export class AdminComponent implements OnInit {
   }
 
   async updateOrderStatus(orderId: string, status: string, advancePaid: boolean = false, advanceAmount?: number) {
-    await this.supabase.updateOrderStatus(orderId, status, advancePaid, advanceAmount);
-    await this.loadData();
+    console.log('Updating order', orderId, 'to status', status);
+    try {
+      await this.supabase.updateOrderStatus(orderId, status, advancePaid, advanceAmount);
+      console.log('Order updated successfully');
+      await this.loadData();
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert('Error al actualizar el estado: ' + (error as any).message);
+    }
   }
 
   async markAdvanceReceived(order: Order) {

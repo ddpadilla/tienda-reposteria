@@ -146,8 +146,7 @@ declare var paypal: any;
                     <label for="payment-transfer" class="payment-content">
                       <span class="payment-icon">🏦</span>
                       <div class="payment-text">
-                        <span class="payment-title">Transferencia/Depósito</span>
-                        <span class="payment-desc">Paga el 50% de anticipo</span>
+                        <span class="payment-title">Transferencia/Depósito Bancario</span>
                       </div>
                     </label>
                   </div>
@@ -157,7 +156,7 @@ declare var paypal: any;
                   <div class="transfer-instructions">
                     <h3>Instrucciones de Pago</h3>
                     @if (paymentSettings(); as settings) {
-                      <p>1. Realiza tu transferencia del <strong>{{ settings.advance_percentage }}% (L {{ (cartService.totalHNL() * settings.advance_percentage / 100) | number:'1.2-2' }})</strong> como anticipo</p>
+                      <p>1. Realiza tu transferencia o deposito por la cantidad de <strong> (L {{ (cartService.totalHNL() ) | number:'1.2-2' }})</strong> mientras preparamos tu pedido</p>
                       <p>2. Envía el comprobante por:</p>
                       <ul>
                         <li>WhatsApp: {{ settings.whatsapp }}</li>
@@ -171,11 +170,7 @@ declare var paypal: any;
                         <p><strong>Beneficiario:</strong> {{ settings.account_holder }}</p>
                       </div>
 
-                      @if (settings.instructions) {
-                        <div class="custom-instructions" [innerHTML]="settings.instructions"></div>
-                      }
-
-                      <p class="remaining-note">El {{ 100 - settings.advance_percentage }}% restante (L {{ (cartService.totalHNL() * (100 - settings.advance_percentage) / 100) | number:'1.2-2' }}) se pagal al momento de la entrega.</p>
+                     
                     } @else {
                       <p>Cargando información de pago...</p>
                     }

@@ -143,8 +143,9 @@ export class SupabaseService {
 
   async updateOrderStatus(id: string, status: string, advancePaid: boolean = false, advanceAmount?: number): Promise<Order> {
     const update: any = { status, updated_at: new Date().toISOString() };
-    
-    if (advancePaid) {
+
+    // Si el estado es Pagado Total, marcar como anticipo pagado también para reflejar pago completo
+    if (advancePaid || status === 'pagado_total') {
       update.advance_paid = true;
       update.advance_paid_at = new Date().toISOString();
       if (advanceAmount !== undefined) {
@@ -152,17 +153,21 @@ export class SupabaseService {
       }
     }
 
+    console.log('Sending update to Supabase:', { id, update });
+
     const { data, error } = await this.client
       .from('orders')
       .update(update)
       .eq('id', id)
       .select()
       .single();
-    
-    if (error) throw error;
+
+    if (error) {
+      console.error('Supabase update error:', error);
+      throw error;
+    }
     return data;
   }
-
   async addOrderItems(items: Partial<OrderItem>[]): Promise<void> {
     const { error } = await this.client
       .from('order_items')
