@@ -61,6 +61,7 @@ import { RouterLink } from '@angular/router';
           <div class="footer-legal">
             <a routerLink="/aviso-legal">Aviso Legal</a>
             <a routerLink="/privacidad">Privacidad</a>
+            <a routerLink="/admin">Administrador</a>
           </div>
         </div>
       </div>
