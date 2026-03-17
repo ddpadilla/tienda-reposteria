@@ -91,10 +91,14 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       <!-- Categorías -->
       <section class="categories" appScrollReveal>
         <div class="container">
-          <h2 class="section-title" appScrollReveal animation="slide-up" [delay]="0">Explorar por Categoría</h2>
+          <h2 class="section-title" appScrollReveal animation="slide-up">Explorar por Categoría</h2>
           <div class="category-grid">
-            @for (cat of homeCategories(); track cat.id) {
-              <a [routerLink]="['/shop']" [queryParams]="{category: cat.id}" class="category-card-v2" appScrollReveal animation="slide-up" [delay]="cat.delay">
+            @for (cat of homeCategories(); track cat.id; let i = $index) {
+              <a [routerLink]="['/shop']" [queryParams]="{category: cat.id}" 
+                 class="category-card-v2" 
+                 appScrollReveal 
+                 animation="slide-up" 
+                 [delay]="i * 100">
                 <div class="category-img-container">
                   <img [src]="cat.image" [alt]="cat.name" loading="lazy">
                   <div class="category-overlay">
@@ -114,15 +118,15 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       <section class="luxury-experience" appScrollReveal>
         <div class="container">
           <div class="luxury-header">
-            <span class="luxury-eyebrow" appScrollReveal animation="slide-up" [delay]="0">Nuestra Promesa</span>
-            <h2 class="luxury-title" appScrollReveal animation="slide-up" [delay]="150">Una Experiencia de Lujo</h2>
-            <p class="luxury-subtitle" appScrollReveal animation="slide-up" [delay]="300">
+            <span class="luxury-eyebrow" appScrollReveal animation="slide-up">Nuestra Promesa</span>
+            <h2 class="luxury-title" appScrollReveal animation="slide-up" [delay]="100">Una Experiencia de Lujo</h2>
+            <p class="luxury-subtitle" appScrollReveal animation="slide-up" [delay]="200">
               Nuestra repostería no es solo comida, es un viaje sensorial diseñado para elevar cada celebración
             </p>
           </div>
 
           <div class="luxury-grid">
-            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="450">
+            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="100">
               <div class="luxury-icon-wrapper">
                 <span class="luxury-icon">🌿</span>
               </div>
@@ -130,7 +134,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
               <div class="luxury-divider"></div>
               <p>Seleccionamos meticulosamente cada materia prima para asegurar la máxima frescura y pureza en cada bocado.</p>
             </div>
-            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="600">
+            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="200">
               <div class="luxury-icon-wrapper">
                 <span class="luxury-icon">🎁</span>
               </div>
@@ -138,7 +142,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
               <div class="luxury-divider"></div>
               <p>Formatos individuales diseñados para ser la pieza central perfecta para cualquier obsequio sofisticado.</p>
             </div>
-            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="750">
+            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="300">
               <div class="luxury-icon-wrapper">
                 <span class="luxury-icon">✨</span>
               </div>
@@ -146,7 +150,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
               <div class="luxury-divider"></div>
               <p>Envases innovadores que permiten llevar la sofisticación de nuestra repostería a cualquier rincón.</p>
             </div>
-            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="900">
+            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="400">
               <div class="luxury-icon-wrapper">
                 <span class="luxury-icon">♻️</span>
               </div>
@@ -159,17 +163,20 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       </section>
 
       <!-- Productos Destacados -->
-      <section class="featured-products">
+      <section class="featured-products" appScrollReveal>
         <div class="container">
-          <h2 class="section-title">Productos Destacados</h2>
+          <h2 class="section-title" appScrollReveal animation="slide-up">Productos Destacados</h2>
           @if (isLoading()) {
             <app-loading-spinner />
           } @else {
             <div class="products-grid">
-              @for (product of featuredProducts(); track product.id) {
+              @for (product of featuredProducts(); track product.id; let i = $index) {
                 <app-product-card
                   [product]="product"
                   (addToCart)="addToCart($event)"
+                  appScrollReveal 
+                  animation="slide-up" 
+                  [delay]="i * 100"
                 />
               }
             </div>
@@ -185,9 +192,9 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
         <div class="parallax-bg" [style.backgroundImage]="'url(https://images.unsplash.com/photo-1551024601-bec78aea704b?w=1920&q=80)'"></div>
         <div class="parallax-overlay"></div>
         <div class="container">
-          <div class="about-content">
-            <h2>Nuestra Visión de la Repostería Artesanal</h2>
-            <p>
+          <div class="about-content" appScrollReveal animation="slide-up">
+            <h2 appScrollReveal animation="slide-up" [delay]="150">Nuestra Visión de la Repostería Artesanal</h2>
+            <p appScrollReveal animation="slide-up" [delay]="300">
               Cada creación en Sweet Bloom es el resultado de una búsqueda incansable de la perfección.
               Fusionamos técnicas tradicionales con un diseño visual vanguardista para transformar
               ingredientes premium en joyas comestibles. Nuestro compromiso con lo artesanal significa
