@@ -24,7 +24,7 @@ import { CartService } from '../../../core/services/cart.service';
           <li><a routerLink="/blog" routerLinkActive="active" (click)="closeMenu()">Blog</a></li>
         </ul>
 
-        <a routerLink="/cart" class="nav-cart" [class.bump]="shouldBump()">
+        <a routerLink="/cart" class="nav-cart" [class.bump]="shouldBump()" (click)="scrollToTop()">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
@@ -39,7 +39,7 @@ import { CartService } from '../../../core/services/cart.service';
 
     <!-- Botón Flotante de Carrito -->
     @if (cartService.itemCount() > 0) {
-      <a routerLink="/cart" class="floating-cart" [class.bump]="shouldBump()" aria-label="Ver carrito">
+      <a routerLink="/cart" class="floating-cart" [class.bump]="shouldBump()" aria-label="Ver carrito" (click)="scrollToTop()">
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
           <circle cx="9" cy="21" r="1"></circle>
           <circle cx="20" cy="21" r="1"></circle>
@@ -67,7 +67,7 @@ import { CartService } from '../../../core/services/cart.service';
     /* Estilos Botón Flotante */
     .floating-cart {
       position: fixed;
-      bottom: 30px;
+      bottom: 110px; /* Subido para evitar tapar el admin en el footer móvil */
       right: 30px;
       width: 64px;
       height: 64px;
@@ -80,6 +80,15 @@ import { CartService } from '../../../core/services/cart.service';
       z-index: var(--z-floating);
       transition: transform 0.3s ease, background 0.3s ease;
       text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .floating-cart {
+        bottom: 120px; /* Un poco más alto en móvil por si acaso */
+        right: 20px;
+        width: 56px;
+        height: 56px;
+      }
     }
 
     .floating-cart:hover {
@@ -287,5 +296,9 @@ export class NavbarComponent {
 
   closeMenu() {
     this.isMenuOpen.set(false);
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
