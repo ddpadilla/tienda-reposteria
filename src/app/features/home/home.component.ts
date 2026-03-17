@@ -19,7 +19,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
           <div class="hero-carousel-container">
             @for (slide of heroSlides(); track slide.id; let i = $index) {
               <div class="hero-slide" [class.active]="currentSlide() === i">
-                
+
                 <!-- Columna Texto -->
                 <div class="hero-content-split">
                   <div class="hero-text-wrapper">
@@ -50,7 +50,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
                   <!-- Decoraciones abstractas CSS -->
                   <div class="shape-star shape-1">✦</div>
                   <div class="shape-star shape-2">✦</div>
-                  
+
                   <!-- Contenedor de imagen estilo "Pill/Arch" -->
                   <div class="hero-image-frame" [class.loading]="!isImageLoaded(slide.image_url)">
                     @if (isImageLoaded(slide.image_url)) {
@@ -61,14 +61,14 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
 
               </div>
             }
-            
+
             <!-- Controles integrados -->
             @if (heroSlides().length > 1) {
               <div class="hero-controls">
                 <button class="nav-arrow" (click)="prevSlide()" aria-label="Anterior">←</button>
                 <div class="hero-dots">
                   @for (slide of heroSlides(); track slide.id; let i = $index) {
-                    <button 
+                    <button
                       class="dot"
                       [class.active]="currentSlide() === i"
                       (click)="goToSlide(i)"
@@ -81,27 +81,9 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
             }
           </div>
         } @else {
-          <!-- Fallback Hero -->
-          <div class="hero-slide active">
-            <div class="hero-content-split">
-              <div class="hero-text-wrapper">
-                <span class="hero-eyebrow">Exclusividad</span>
-                <h1 class="hero-title-split">
-                  Repostería de Alta Gama <br>para <em>Momentos Únicos</em>
-                </h1>
-                <p class="hero-subtitle-split">
-                  Descubre nuestra colección de postres artesanales elaborados con los mejores ingredientes
-                </p>
-                <div class="hero-actions">
-                  <a routerLink="/shop" class="btn btn-pill btn-primary">Ver Catálogo</a>
-                </div>
-              </div>
-            </div>
-            <div class="hero-visual-split">
-              <div class="hero-image-frame">
-                <div class="placeholder-art"></div>
-              </div>
-            </div>
+          <!-- Loading State -->
+          <div class="hero-loading-container">
+            <img src="assets/load-logo.png" alt="Cargando..." class="hero-load-logo">
           </div>
         }
       </section>
@@ -168,7 +150,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
           } @else {
             <div class="products-grid">
               @for (product of featuredProducts(); track product.id) {
-                <app-product-card 
+                <app-product-card
                   [product]="product"
                   (addToCart)="addToCart($event)"
                 />
@@ -189,10 +171,10 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
           <div class="about-content">
             <h2>Nuestra Visión de la Repostería Artesanal</h2>
             <p>
-              Cada creación en Sweet Bloom es el resultado de una búsqueda incansable de la perfección. 
-              Fusionamos técnicas tradicionales con un diseño visual vanguardista para transformar 
-              ingredientes premium en joyas comestibles. Nuestro compromiso con lo artesanal significa 
-              que cada detalle, desde la textura de una crema hasta la portabilidad de nuestros vasitos, 
+              Cada creación en Sweet Bloom es el resultado de una búsqueda incansable de la perfección.
+              Fusionamos técnicas tradicionales con un diseño visual vanguardista para transformar
+              ingredientes premium en joyas comestibles. Nuestro compromiso con lo artesanal significa
+              que cada detalle, desde la textura de una crema hasta la portabilidad de nuestros vasitos,
               está pensado para ofrecerte un momento de indulgencia inigualable.
             </p>
           </div>
@@ -209,7 +191,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       min-height: 700px;
       display: flex;
       align-items: center;
-      padding: var(--spacing-md) var(--spacing-md) var(--spacing-2xl) var(--spacing-md);
+      padding: var(--spacing-md) var(--spacing-md) var(--spacing-xl) var(--spacing-md);
     }
 
     .hero-carousel-container {
@@ -379,6 +361,34 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       background: linear-gradient(135deg, var(--color-gold-light), var(--color-rose-pastel));
     }
 
+    /* Hero Loading */
+    .hero-loading-container {
+      width: 100%;
+      height: 600px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-load-logo {
+      width: 250px;
+      height: auto;
+      animation: bounce 2s infinite;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-30px);
+      }
+      60% {
+        transform: translateY(-15px);
+      }
+    }
+
     /* Controles Integrados */
     .hero-controls {
       position: absolute;
@@ -464,7 +474,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
         height: 420px;
       }
     }
-    
+
     @media (max-width: 768px) {
       .hero-title-split {
         font-size: 2.5rem;
@@ -484,7 +494,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
 
     /* Categorías */
     .categories {
-      padding: var(--spacing-3xl) 0;
+      padding: var(--spacing-2xl) 0 var(--spacing-3xl) 0;
     }
 
     .section-title {
@@ -504,22 +514,29 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       border-radius: var(--border-radius-lg);
       text-align: center;
       box-shadow: var(--shadow-sm);
-      transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+      transition: transform var(--transition-slow), box-shadow var(--transition-slow);
     }
 
     .category-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
     }
 
     .category-icon {
       font-size: 3rem;
       margin-bottom: var(--spacing-md);
+      transition: transform var(--transition-slow);
+    }
+
+    .category-card:hover .category-icon {
+      transform: scale(1.1) rotate(5deg);
     }
 
     .category-card h3 {
       font-family: var(--font-serif);
       font-size: 1.25rem;
+      color: var(--color-brown);
+      text-decoration: none;
     }
 
     /* Valores */
@@ -544,11 +561,24 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
     .value-card {
       text-align: center;
       padding: var(--spacing-lg);
+      background: transparent;
+      border-radius: var(--border-radius-md);
+      transition: transform var(--transition-slow), background-color var(--transition-slow);
+    }
+
+    .value-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.5);
     }
 
     .value-icon {
       font-size: 2.5rem;
       margin-bottom: var(--spacing-md);
+      transition: transform var(--transition-slow);
+    }
+
+    .value-card:hover .value-icon {
+      transform: scale(1.1);
     }
 
     .value-card h3 {
@@ -674,10 +704,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       ]);
       this.featuredProducts.set(products.slice(0, 6));
       this.heroSlides.set(slides);
-      
+
       // Preload images
       this.preloadImages(slides);
-      
+
       if (slides.length > 1) {
         this.startAutoSlide();
       }
@@ -703,7 +733,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           console.error('Error loading image:', slide.image_url);
         };
         img.src = slide.image_url;
-        
+
         // Show first image immediately
         if (index === 0) {
           this.currentSlide.set(0);

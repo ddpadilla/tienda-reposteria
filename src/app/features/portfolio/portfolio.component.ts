@@ -61,22 +61,22 @@ import { Component } from '@angular/core';
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform var(--transition-slow);
+      transition: transform 0.3s ease;
     }
 
     .portfolio-item:hover img {
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
 
     .portfolio-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(61,44,44,0.8) 0%, transparent 50%);
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
       display: flex;
       align-items: flex-end;
       padding: var(--spacing-lg);
       opacity: 0;
-      transition: opacity var(--transition-normal);
+      transition: opacity 0.3s ease;
     }
 
     .portfolio-item:hover .portfolio-overlay {

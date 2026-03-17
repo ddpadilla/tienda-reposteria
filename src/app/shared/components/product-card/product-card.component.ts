@@ -51,13 +51,13 @@ import { Product } from '../../../core/models';
       border-radius: var(--border-radius-md);
       overflow: hidden;
       box-shadow: var(--shadow-sm);
-      transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+      transition: transform var(--transition-slow), box-shadow var(--transition-slow);
       position: relative;
     }
 
     .product-card:hover,
     .product-card:focus-within {
-      transform: translateY(-6px);
+      transform: translateY(-8px);
       box-shadow: var(--shadow-lg);
     }
 
