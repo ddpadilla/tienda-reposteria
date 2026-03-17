@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
+import { ImgLoadDirective } from '../../shared/directives/img-load.directive';
 
 @Component({
   selector: 'app-portfolio',
   standalone: true,
+  imports: [ImgLoadDirective],
   template: `
     <main class="portfolio-page">
       <div class="container">
@@ -13,8 +15,8 @@ import { Component } from '@angular/core';
 
         <div class="portfolio-grid">
           @for (item of portfolioItems; track item.title) {
-            <div class="portfolio-item">
-              <img [src]="item.image" [alt]="item.title">
+            <div class="portfolio-item skeleton-loader">
+              <img [src]="item.image" [alt]="item.title" loading="lazy" decoding="async">
               <div class="portfolio-overlay">
                 <h3>{{ item.title }}</h3>
               </div>
@@ -55,13 +57,14 @@ import { Component } from '@angular/core';
       border-radius: var(--border-radius-md);
       overflow: hidden;
       cursor: pointer;
+      background: var(--color-cream-dark);
     }
 
     .portfolio-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, opacity 0.5s ease;
     }
 
     .portfolio-item:hover img {
@@ -77,6 +80,7 @@ import { Component } from '@angular/core';
       padding: var(--spacing-lg);
       opacity: 0;
       transition: opacity 0.3s ease;
+      z-index: 1;
     }
 
     .portfolio-item:hover .portfolio-overlay {

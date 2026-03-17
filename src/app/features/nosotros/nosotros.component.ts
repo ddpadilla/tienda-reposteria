@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
+import { ImgLoadDirective } from '../../shared/directives/img-load.directive';
 
 @Component({
   selector: 'app-nosotros',
   standalone: true,
-  imports: [RouterLink, ScrollRevealDirective],
+  imports: [RouterLink, ScrollRevealDirective, ImgLoadDirective],
   template: `
     <main class="about-page">
       <!-- Hero Section -->
@@ -23,8 +24,8 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       <section class="our-essence section-padding">
         <div class="container">
           <div class="essence-grid">
-            <div class="essence-image" appScrollReveal animation="slide-right">
-              <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&q=80" alt="Nuestra cocina" class="img-fluid rounded-lg shadow-lg">
+            <div class="essence-image skeleton-loader" appScrollReveal animation="slide-right">
+              <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&q=80" alt="Nuestra cocina" class="img-fluid rounded-lg shadow-lg" loading="lazy" decoding="async">
             </div>
             <div class="essence-text" appScrollReveal animation="slide-left">
               <h2 class="section-title">Pasión por la Excelencia</h2>

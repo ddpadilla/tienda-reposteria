@@ -6,11 +6,12 @@ import { Product, HeroSlide } from '../../core/models';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.directive';
+import { ImgLoadDirective } from '../../shared/directives/img-load.directive';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, ProductCardComponent, LoadingSpinnerComponent, ScrollRevealDirective],
+  imports: [RouterLink, ProductCardComponent, LoadingSpinnerComponent, ScrollRevealDirective, ImgLoadDirective],
   template: `
     <main>
       <!-- Hero Carousel Refactorizado -->
@@ -54,7 +55,7 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
                   <!-- Contenedor de imagen estilo "Pill/Arch" -->
                   <div class="hero-image-frame" [class.loading]="!isImageLoaded(slide.image_url)">
                     @if (isImageLoaded(slide.image_url)) {
-                      <img [src]="slide.image_url" [alt]="slide.title" class="hero-img">
+                      <img [src]="slide.image_url" [alt]="slide.title" class="hero-img" [attr.fetchpriority]="i === 0 ? 'high' : 'low'" decoding="async">
                     }
                   </div>
                 </div>
@@ -99,8 +100,8 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
                  appScrollReveal 
                  animation="slide-up" 
                  [delay]="i * 100">
-                <div class="category-img-container">
-                  <img [src]="cat.image" [alt]="cat.name" loading="lazy">
+                <div class="category-img-container skeleton-loader">
+                  <img [src]="cat.image" [alt]="cat.name" loading="lazy" decoding="async">
                   <div class="category-overlay">
                     <div class="category-info">
                       <h3>{{ cat.name }}</h3>

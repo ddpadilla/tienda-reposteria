@@ -2,17 +2,18 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { Product } from '../../../core/models';
+import { ImgLoadDirective } from '../../directives/img-load.directive';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink, DecimalPipe, ImgLoadDirective],
   template: `
     <article class="product-card">
       <a [routerLink]="['/product', product.id]" class="product-image-link">
-        <div class="product-image">
+        <div class="product-image skeleton-loader">
           @if (product.image_url) {
-            <img [src]="product.image_url" [alt]="product.name" loading="lazy">
+            <img [src]="product.image_url" [alt]="product.name" loading="lazy" decoding="async">
           } @else {
             <div class="product-placeholder">
               <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">

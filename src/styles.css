@@ -214,6 +214,34 @@ h3 { font-size: 1.75rem; }
   will-change: opacity, transform;
 }
 
+/* --- OPTIMIZACIONES DE CARGA (UX) --- */
+
+/* Animación de Shimmer (Esqueleto de carga) */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-loader {
+  background: linear-gradient(90deg, 
+    var(--color-cream-dark) 25%, 
+    var(--color-base) 50%, 
+    var(--color-cream-dark) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+/* Efecto de entrada suave para imágenes (solo si cargan lento) */
+img {
+  transition: opacity 0.4s ease;
+}
+
+/* Eliminamos la opacidad 0 por defecto para asegurar que siempre se vean */
+img[loading="lazy"] {
+  opacity: 1; 
+}
+
 /* Estado oculto */
 .scroll-reveal-fade {
   transform: scale(0.98);

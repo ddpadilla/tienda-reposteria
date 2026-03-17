@@ -5,11 +5,12 @@ import { SupabaseService } from '../../core/services/supabase.service';
 import { CartService } from '../../core/services/cart.service';
 import { Product } from '../../core/models';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
+import { ImgLoadDirective } from '../../shared/directives/img-load.directive';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [RouterLink, LoadingSpinnerComponent, DecimalPipe, TitleCasePipe],
+  imports: [RouterLink, LoadingSpinnerComponent, DecimalPipe, TitleCasePipe, ImgLoadDirective],
   template: `
     <main class="product-detail-page">
       <div class="container">
@@ -23,9 +24,9 @@ import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner
         } @else {
           <div class="product-layout">
             <!-- Imagen -->
-            <div class="product-image">
+            <div class="product-image skeleton-loader">
               @if (product()!.image_url) {
-                <img [src]="product()!.image_url" [alt]="product()!.name">
+                <img [src]="product()!.image_url" [alt]="product()!.name" loading="lazy" decoding="async">
               } @else {
                 <div class="image-placeholder">
                   <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
