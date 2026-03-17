@@ -477,18 +477,30 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
 
     @media (max-width: 768px) {
       .hero-title-split {
-        font-size: 2.5rem;
+        font-size: 2rem; /* Más pequeño para móviles */
       }
       .hero-actions {
         flex-direction: column;
         width: 100%;
+        gap: var(--spacing-md);
       }
       .hero-actions .btn {
         width: 100%;
       }
       .hero-image-frame {
-        width: 250px;
+        width: 100%;
+        max-width: 280px;
         height: 350px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title-split {
+        font-size: 1.75rem;
+      }
+      .hero-image-frame {
+        max-width: 250px;
+        height: 300px;
       }
     }
 
@@ -664,11 +676,16 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
 
     @media (max-width: 768px) {
       .hero {
-        min-height: 60vh;
+        min-height: auto;
       }
 
       .category-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: var(--spacing-md);
+      }
+
+      .category-card {
+        padding: var(--spacing-lg) var(--spacing-sm);
       }
 
       .hero-carousel .carousel-content {
