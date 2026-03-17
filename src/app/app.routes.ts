@@ -30,10 +30,9 @@ export const routes: Routes = [
     loadComponent: () => import('./features/portfolio/portfolio.component').then(m => m.PortfolioComponent)
   },
   {
-    path: 'blog',
-    loadComponent: () => import('./features/blog/blog.component').then(m => m.BlogComponent)
-  },
-  {
+  path: 'nosotros',
+  loadComponent: () => import('./features/nosotros/nosotros.component').then(m => m.NosotrosComponent)
+  },  {
     path: 'admin',
     loadComponent: () => import('./features/admin/admin.component').then(m => m.AdminComponent)
   },

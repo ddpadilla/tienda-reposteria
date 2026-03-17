@@ -21,7 +21,7 @@ import { CartService } from '../../../core/services/cart.service';
           <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Inicio</a></li>
           <li><a routerLink="/portfolio" routerLinkActive="active" (click)="closeMenu()">Portfolio</a></li>
           <li><a routerLink="/shop" routerLinkActive="active" (click)="closeMenu()">Tienda</a></li>
-          <li><a routerLink="/blog" routerLinkActive="active" (click)="closeMenu()">Blog</a></li>
+          <li><a routerLink="/nosotros" routerLinkActive="active" (click)="closeMenu()">Nosotros</a></li>
         </ul>
 
         <a routerLink="/cart" class="nav-cart" [class.bump]="shouldBump()" (click)="scrollToTop()">

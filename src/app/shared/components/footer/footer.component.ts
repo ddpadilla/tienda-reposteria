@@ -20,7 +20,7 @@ import { RouterLink } from '@angular/router';
             <li><a routerLink="/">Inicio</a></li>
             <li><a routerLink="/portfolio">Portfolio</a></li>
             <li><a routerLink="/shop">Tienda</a></li>
-            <li><a routerLink="/blog">Blog</a></li>
+            <li><a routerLink="/nosotros">Nosotros</a></li>
           </ul>
         </div>
 
