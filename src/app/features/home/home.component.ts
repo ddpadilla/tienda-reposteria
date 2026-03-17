@@ -13,61 +13,96 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
   imports: [RouterLink, ProductCardComponent, LoadingSpinnerComponent, ScrollRevealDirective],
   template: `
     <main>
-      <!-- Hero Carousel -->
-      <section class="hero-carousel">
+      <!-- Hero Carousel Refactorizado -->
+      <section class="hero-section">
         @if (heroSlides().length > 0) {
-          <div class="carousel">
+          <div class="hero-carousel-container">
             @for (slide of heroSlides(); track slide.id; let i = $index) {
-              <div 
-                class="carousel-slide"
-                [class.active]="currentSlide() === i"
-                [class.loading]="!isImageLoaded(slide.image_url)"
-                [style.backgroundImage]="isImageLoaded(slide.image_url) ? 'url(' + slide.image_url + ')' : ''"
-              >
-                <div class="carousel-overlay"></div>
-                <div class="carousel-content">
-                  @if (slide.title) {
-                    <h1 class="hero-title">{{ slide.title }}</h1>
-                  }
-                  @if (slide.subtitle) {
-                    <p class="hero-subtitle">{{ slide.subtitle }}</p>
-                  }
-                  @if (slide.button_text) {
-                    <a [routerLink]="slide.button_link || '/shop'" class="btn btn-gold">
-                      {{ slide.button_text }}
-                    </a>
-                  }
+              <div class="hero-slide" [class.active]="currentSlide() === i">
+                
+                <!-- Columna Texto -->
+                <div class="hero-content-split">
+                  <div class="hero-text-wrapper">
+                    <span class="hero-eyebrow">Sweet Bloom</span>
+                    @if (slide.title) {
+                      <h1 class="hero-title-split">
+                        {{ slide.title }}
+                      </h1>
+                    }
+                    @if (slide.subtitle) {
+                      <p class="hero-subtitle-split">{{ slide.subtitle }}</p>
+                    }
+                    <div class="hero-actions">
+                      @if (slide.button_text) {
+                        <a [routerLink]="slide.button_link || '/shop'" class="btn btn-pill btn-primary">
+                          {{ slide.button_text }}
+                        </a>
+                      }
+                      <a routerLink="/portfolio" class="btn btn-pill btn-outline">
+                        Ver Galería
+                      </a>
+                    </div>
+                  </div>
                 </div>
+
+                <!-- Columna Visual -->
+                <div class="hero-visual-split">
+                  <!-- Decoraciones abstractas CSS -->
+                  <div class="shape-star shape-1">✦</div>
+                  <div class="shape-star shape-2">✦</div>
+                  
+                  <!-- Contenedor de imagen estilo "Pill/Arch" -->
+                  <div class="hero-image-frame" [class.loading]="!isImageLoaded(slide.image_url)">
+                    @if (isImageLoaded(slide.image_url)) {
+                      <img [src]="slide.image_url" [alt]="slide.title" class="hero-img">
+                    }
+                  </div>
+                </div>
+
               </div>
             }
             
+            <!-- Controles integrados -->
             @if (heroSlides().length > 1) {
-              <button class="carousel-btn prev" (click)="prevSlide()" aria-label="Anterior">‹</button>
-              <button class="carousel-btn next" (click)="nextSlide()" aria-label="Siguiente">›</button>
-              <div class="carousel-dots">
-                @for (slide of heroSlides(); track slide.id; let i = $index) {
-                  <button 
-                    class="carousel-dot"
-                    [class.active]="currentSlide() === i"
-                    (click)="goToSlide(i)"
-                    [attr.aria-label]="'Slide ' + (i + 1)"
-                  ></button>
-                }
+              <div class="hero-controls">
+                <button class="nav-arrow" (click)="prevSlide()" aria-label="Anterior">←</button>
+                <div class="hero-dots">
+                  @for (slide of heroSlides(); track slide.id; let i = $index) {
+                    <button 
+                      class="dot"
+                      [class.active]="currentSlide() === i"
+                      (click)="goToSlide(i)"
+                      [attr.aria-label]="'Ir a slide ' + (i + 1)"
+                    ></button>
+                  }
+                </div>
+                <button class="nav-arrow" (click)="nextSlide()" aria-label="Siguiente">→</button>
               </div>
             }
           </div>
         } @else {
-          <!-- Fallback hero sin slides -->
-          <section class="hero">
-            <div class="hero-content">
-              <h1 class="hero-title animate-slideUp">Repostería de Alta Gama para Momentos Únicos</h1>
-              <p class="hero-subtitle animate-slideUp">
-                Descubre nuestra colección de postres artesanales elaborados con los mejores ingredientes
-              </p>
-              <a routerLink="/shop" class="btn btn-gold animate-slideUp">Ver Catálogo</a>
+          <!-- Fallback Hero -->
+          <div class="hero-slide active">
+            <div class="hero-content-split">
+              <div class="hero-text-wrapper">
+                <span class="hero-eyebrow">Exclusividad</span>
+                <h1 class="hero-title-split">
+                  Repostería de Alta Gama <br>para <em>Momentos Únicos</em>
+                </h1>
+                <p class="hero-subtitle-split">
+                  Descubre nuestra colección de postres artesanales elaborados con los mejores ingredientes
+                </p>
+                <div class="hero-actions">
+                  <a routerLink="/shop" class="btn btn-pill btn-primary">Ver Catálogo</a>
+                </div>
+              </div>
             </div>
-            <div class="hero-decoration"></div>
-          </section>
+            <div class="hero-visual-split">
+              <div class="hero-image-frame">
+                <div class="placeholder-art"></div>
+              </div>
+            </div>
+          </div>
         }
       </section>
 
@@ -166,43 +201,170 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
     </main>
   `,
   styles: [`
-    /* Hero Carousel */
-    .hero-carousel {
+    /* --- NUEVO HERO SPLIT-SCREEN --- */
+    .hero-section {
+      background-color: var(--color-base); /* Fondo crema limpio */
       position: relative;
-      height: 80vh;
-      min-height: 500px;
       overflow: hidden;
+      min-height: 700px;
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-md) var(--spacing-md) var(--spacing-2xl) var(--spacing-md);
     }
 
-    .carousel {
-      position: relative;
+    .hero-carousel-container {
       width: 100%;
-      height: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      min-height: 600px; /* Altura fija para evitar saltos */
+      display: flex;
+      align-items: center;
     }
 
-    .carousel-slide {
+    .hero-slide {
       position: absolute;
       inset: 0;
-      background-size: cover;
-      background-position: center;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-2xl);
+      align-items: center;
       opacity: 0;
-      transition: opacity 0.8s ease-in-out;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s;
     }
 
-    .carousel-slide.active {
+    .hero-slide.active {
       opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      position: relative; /* El slide activo da la altura real si excede el min-height */
+      z-index: 1;
     }
 
-    .carousel-slide.loading {
-      background-color: var(--color-cream-dark);
-      background-image: none !important;
+    /* Columna de Texto */
+    .hero-content-split {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: var(--spacing-xl);
+      z-index: 2;
     }
 
-    .carousel-slide.loading::after {
+    .hero-eyebrow {
+      font-family: var(--font-sans);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      color: var(--color-accent);
+      margin-bottom: var(--spacing-sm);
+      display: block;
+    }
+
+    .hero-title-split {
+      font-size: clamp(3rem, 6vw, 5rem);
+      line-height: 1.1;
+      color: var(--color-secondary);
+      margin-bottom: var(--spacing-lg);
+      font-family: var(--font-serif);
+      font-weight: 700;
+    }
+
+    /* Estilo para simular el contraste de fuentes de la imagen */
+    .hero-title-split em {
+      color: var(--color-gold);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .hero-subtitle-split {
+      font-size: 1.25rem;
+      color: var(--color-text);
+      line-height: 1.6;
+      max-width: 500px;
+      margin-bottom: var(--spacing-xl);
+      opacity: 0.9;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: var(--spacing-md);
+      align-items: center;
+    }
+
+    .btn-pill {
+      border-radius: 999px; /* Botones redondos estilo referencia */
+      padding: 1rem 2.5rem;
+    }
+
+    /* Columna Visual */
+    .hero-visual-split {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 600px;
+    }
+
+    .hero-image-frame {
+      width: 400px;
+      height: 550px;
+      background-color: var(--color-gold-light);
+      border-radius: 200px; /* Forma de píldora vertical */
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 20px 40px rgba(120, 0, 0, 0.1);
+      transform: rotate(-3deg); /* Ligera inclinación para dinamismo */
+      transition: transform 0.5s ease;
+    }
+
+    .hero-image-frame:hover {
+      transform: rotate(0deg) scale(1.02);
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Decoraciones Abstractas */
+    .shape-star {
+      position: absolute;
+      color: var(--color-gold);
+      font-size: 3rem;
+      z-index: 1;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .shape-1 {
+      top: 10%;
+      left: 10%;
+      font-size: 4rem;
+    }
+
+    .shape-2 {
+      bottom: 15%;
+      right: 15%;
+      font-size: 2.5rem;
+      color: var(--color-accent);
+      animation-delay: -3s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
+    }
+
+    /* Estado de Carga */
+    .hero-image-frame.loading::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+      background-color: var(--color-cream-dark);
       animation: shimmer 1.5s infinite;
     }
 
@@ -211,129 +373,113 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       100% { transform: translateX(100%); }
     }
 
-    .carousel-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 100%);
-    }
-
-    .carousel-content {
-      position: relative;
-      z-index: 2;
+    .placeholder-art {
+      width: 100%;
       height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: var(--spacing-2xl);
-      max-width: 800px;
-      margin: 0 auto;
+      background: linear-gradient(135deg, var(--color-gold-light), var(--color-rose-pastel));
     }
 
-    .carousel-content .hero-title {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      margin-bottom: var(--spacing-lg);
-      color: var(--color-white);
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .carousel-content .hero-subtitle {
-      font-size: 1.25rem;
-      color: var(--color-cream);
-      margin-bottom: var(--spacing-xl);
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-      max-width: 600px;
-    }
-
-    .carousel-btn {
+    /* Controles Integrados */
+    .hero-controls {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 50px;
-      height: 50px;
-      background: rgba(255,255,255,0.2);
-      border: none;
-      border-radius: 50%;
-      color: white;
-      font-size: 2rem;
-      cursor: pointer;
-      transition: background 0.3s;
+      bottom: 0;
+      left: var(--spacing-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
       z-index: 10;
     }
 
-    .carousel-btn:hover {
-      background: rgba(255,255,255,0.4);
-    }
-
-    .carousel-btn.prev { left: 20px; }
-    .carousel-btn.next { right: 20px; }
-
-    .carousel-dots {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-      z-index: 10;
-    }
-
-    .carousel-dot {
-      width: 12px;
-      height: 12px;
+    .nav-arrow {
+      background: transparent;
+      border: 1px solid var(--color-secondary);
+      color: var(--color-secondary);
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.5);
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .carousel-dot.active {
-      background: var(--color-white);
-    }
-
-    /* Hero fallback */
-    .hero {
-      position: relative;
-      min-height: 80vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: var(--spacing-3xl) var(--spacing-md);
-      background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-rose-pastel) 100%);
-      overflow: hidden;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 700px;
-    }
-
-    .hero-title {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      margin-bottom: var(--spacing-lg);
-      color: var(--color-brown);
-    }
-
-    .hero-subtitle {
       font-size: 1.2rem;
-      color: var(--color-brown-light);
-      margin-bottom: var(--spacing-xl);
-      line-height: 1.8;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    .hero-decoration {
-      position: absolute;
-      width: 600px;
-      height: 600px;
+    .nav-arrow:hover {
+      background: var(--color-secondary);
+      color: var(--color-white);
+    }
+
+    .hero-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: radial-gradient(circle, var(--color-gold-light) 0%, transparent 70%);
-      opacity: 0.3;
-      top: -200px;
-      right: -200px;
+      background: rgba(120, 0, 0, 0.2);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .dot.active {
+      background: var(--color-secondary);
+      transform: scale(1.3);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-slide {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+        text-align: center;
+      }
+
+      .hero-content-split {
+        padding-left: 0;
+        align-items: center;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .hero-controls {
+        position: relative;
+        left: 0;
+        justify-content: center;
+        margin-top: var(--spacing-xl);
+      }
+
+      .hero-visual-split {
+        height: auto;
+        padding: var(--spacing-xl) 0;
+      }
+
+      .hero-image-frame {
+        width: 300px;
+        height: 420px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .hero-title-split {
+        font-size: 2.5rem;
+      }
+      .hero-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+      .hero-actions .btn {
+        width: 100%;
+      }
+      .hero-image-frame {
+        width: 250px;
+        height: 350px;
+      }
     }
 
     /* Categorías */

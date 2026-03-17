@@ -144,7 +144,7 @@ import { CartService } from '../../../core/services/cart.service';
 
     .nav-menu a {
       color: var(--color-white);
-      font-size: 1.1rem;
+      font-size: 1.4rem;
       font-weight: 600;
       letter-spacing: 0.5px;
       position: relative;
