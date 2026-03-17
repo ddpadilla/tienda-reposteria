@@ -34,6 +34,19 @@ import { Order, PaymentSettings } from '../../core/models';
                 <span class="label">Cliente</span>
                 <span class="value">{{ order()!.customer_name }}</span>
               </div>
+              
+              <div class="items-list">
+                @for (item of order()!.items; track item.id) {
+                  <div class="item-row">
+                    <span class="item-info">
+                      <span class="qty">{{ item.quantity }}x</span>
+                      <span class="name">{{ item.product_name }}</span>
+                    </span>
+                    <span class="item-price">L {{ (item.unit_price_hnl * item.quantity) | number:'1.2-2' }}</span>
+                  </div>
+                }
+              </div>
+
               <div class="detail-row total">
                 <span class="label">Total a Pagar</span>
                 <span class="value highlight">L {{ order()!.total_hnl | number:'1.2-2' }}</span>
@@ -87,7 +100,6 @@ import { Order, PaymentSettings } from '../../core/models';
 
             <div class="actions">
               <a routerLink="/" class="btn btn-gold">Ir a la Tienda</a>
-              <button (click)="window.print()" class="btn btn-outline btn-sm">Imprimir Recibo</button>
             </div>
           }
         </div>
@@ -154,6 +166,44 @@ import { Order, PaymentSettings } from '../../core/models';
       justify-content: space-between;
       padding: var(--spacing-xs) 0;
       font-size: 0.95rem;
+    }
+
+    .items-list {
+      margin: var(--spacing-sm) 0;
+      padding: var(--spacing-sm) 0;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      font-size: 0.9rem;
+      color: var(--color-gray-dark);
+    }
+
+    .item-info {
+      display: flex;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
+
+    .qty {
+      font-weight: 700;
+      color: var(--color-secondary);
+      font-size: 0.85rem;
+      min-width: 25px;
+    }
+
+    .name {
+      text-align: left;
+    }
+
+    .item-price {
+      font-weight: 500;
+      color: var(--color-brown);
     }
 
     .detail-row.total {
@@ -265,12 +315,6 @@ import { Order, PaymentSettings } from '../../core/models';
       gap: var(--spacing-sm);
     }
 
-    .print-btn {
-      border: none;
-      color: var(--color-gray);
-      font-size: 0.75rem;
-    }
-
     @media (max-width: 600px) {
       .confirmation-card {
         padding: var(--spacing-md);
@@ -292,7 +336,6 @@ import { Order, PaymentSettings } from '../../core/models';
 export class OrderConfirmationComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private supabase = inject(SupabaseService);
-  window = window;
 
   order = signal<Order | null>(null);
   paymentSettings = signal<PaymentSettings | null>(null);
