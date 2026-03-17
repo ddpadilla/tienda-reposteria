@@ -10,7 +10,7 @@ import { CartService } from '../../../core/services/cart.service';
     <nav class="navbar" [class.scrolled]="isScrolled()">
       <div class="nav-container">
         <a routerLink="/" class="nav-logo">
-          <img src="assets/logo-removebg.png" alt="Sweet Bloom">
+          <img src="assets/nvologo-removebg-preview.png" alt="Sweet Bloom">
         </a>
 
         <button class="nav-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
@@ -132,7 +132,7 @@ import { CartService } from '../../../core/services/cart.service';
     }
 
     .nav-logo img {
-      height: 60px;
+      height: 70px;
       width: auto;
     }
 

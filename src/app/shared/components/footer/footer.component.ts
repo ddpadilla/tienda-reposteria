@@ -9,6 +9,7 @@ import { RouterLink } from '@angular/router';
     <footer class="footer">
       <div class="footer-container">
         <div class="footer-brand">
+          <img src="assets/nvologo-removebg-preview.png" alt="Sweet Bloom Logo" class="footer-logo-img">
           <h3 class="footer-logo">Sweet Bloom</h3>
           <p class="footer-tagline">Artesanía dulce. Hecho con amor.</p>
         </div>
@@ -81,11 +82,28 @@ import { RouterLink } from '@angular/router';
       gap: var(--spacing-xl);
     }
 
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Alineación matemática estricta a la izquierda */
+      justify-content: flex-start;
+    }
+
+    .footer-logo-img {
+      height: 80px;
+      width: auto;
+      margin: 0 0 var(--spacing-sm) 0; /* Sin margen izquierdo/derecho */
+      filter: brightness(0) invert(1);
+      display: block;
+      object-fit: contain;
+      object-position: left center;
+    }
+
     .footer-logo {
       font-family: var(--font-serif);
       font-size: 1.75rem;
       color: var(--color-white);
-      margin-bottom: var(--spacing-sm);
+      margin: 0 0 var(--spacing-sm) 0; /* Sin margen izquierdo */
       font-weight: 700;
     }
 
