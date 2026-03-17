@@ -206,30 +206,30 @@ h3 { font-size: 1.75rem; }
   .container { padding: 0 var(--spacing-sm); }
 }
 
-/* ANIMACIONES SCROLL REVEAL */
+/* ANIMACIONES SCROLL REVEAL - ESTILO PREMIUM */
 .scroll-reveal {
   opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity, transform; /* Optimización GPU */
+  transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), 
+              transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: opacity, transform;
 }
 
 /* Estado oculto */
 .scroll-reveal-fade {
-  transform: none;
+  transform: scale(0.98);
 }
 .scroll-reveal-slide-up {
-  transform: translateY(40px);
+  transform: translateY(60px) scale(0.98);
 }
 .scroll-reveal-slide-left {
-  transform: translateX(40px);
+  transform: translateX(40px) scale(0.98);
 }
 .scroll-reveal-slide-right {
-  transform: translateX(-40px);
+  transform: translateX(-40px) scale(0.98);
 }
 
-/* Estado visible (Agregado por la directiva ScrollReveal) */
+/* Estado visible */
 .scroll-reveal.revealed {
   opacity: 1;
-  transform: translate(0, 0);
+  transform: translate(0, 0) scale(1);
 }

@@ -91,51 +91,68 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       <!-- Categorías -->
       <section class="categories" appScrollReveal>
         <div class="container">
-          <h2 class="section-title" appScrollReveal animation="fade" [delay]="0">Explorar por Categoría</h2>
+          <h2 class="section-title" appScrollReveal animation="slide-up" [delay]="0">Explorar por Categoría</h2>
           <div class="category-grid">
-            <a routerLink="/shop" [queryParams]="{category: 'cups'}" class="category-card" appScrollReveal animation="slide-up" [delay]="100">
-              <div class="category-icon">🍨</div>
-              <h3>Vasitos Gourmet</h3>
-            </a>
-            <a routerLink="/shop" [queryParams]="{category: 'mini-cakes'}" class="category-card" appScrollReveal animation="slide-up" [delay]="200">
-              <div class="category-icon">🎂</div>
-              <h3>Mini Tartas</h3>
-            </a>
-            <a routerLink="/shop" [queryParams]="{category: 'molds'}" class="category-card" appScrollReveal animation="slide-up" [delay]="300">
-              <div class="category-icon">🍫</div>
-              <h3>Ediciones Especiales</h3>
-            </a>
+            @for (cat of homeCategories(); track cat.id) {
+              <a [routerLink]="['/shop']" [queryParams]="{category: cat.id}" class="category-card-v2" appScrollReveal animation="slide-up" [delay]="cat.delay">
+                <div class="category-img-container">
+                  <img [src]="cat.image" [alt]="cat.name" loading="lazy">
+                  <div class="category-overlay">
+                    <div class="category-info">
+                      <h3>{{ cat.name }}</h3>
+                      <span class="category-btn">Ver Catálogo</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            }
           </div>
         </div>
       </section>
 
       <!-- Valores -->
-      <section class="values" appScrollReveal>
+      <section class="luxury-experience" appScrollReveal>
         <div class="container">
-          <h2 class="section-title">Una Experiencia de Lujo</h2>
-          <p class="section-subtitle">
-            Nuestra repostería no es solo comida, es un viaje sensorial diseñado para elevar cada celebración
-          </p>
-            <div class="values-grid">
-            <div class="value-card" appScrollReveal animation="slide-up" [delay]="0">
-              <div class="value-icon">🌿</div>
+          <div class="luxury-header">
+            <span class="luxury-eyebrow" appScrollReveal animation="slide-up" [delay]="0">Nuestra Promesa</span>
+            <h2 class="luxury-title" appScrollReveal animation="slide-up" [delay]="150">Una Experiencia de Lujo</h2>
+            <p class="luxury-subtitle" appScrollReveal animation="slide-up" [delay]="300">
+              Nuestra repostería no es solo comida, es un viaje sensorial diseñado para elevar cada celebración
+            </p>
+          </div>
+
+          <div class="luxury-grid">
+            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="450">
+              <div class="luxury-icon-wrapper">
+                <span class="luxury-icon">🌿</span>
+              </div>
               <h3>Ingredientes de Primera</h3>
-              <p>Seleccionamos meticulosamente cada materia prima para asegurar la máxima frescura y pureza</p>
+              <div class="luxury-divider"></div>
+              <p>Seleccionamos meticulosamente cada materia prima para asegurar la máxima frescura y pureza en cada bocado.</p>
             </div>
-            <div class="value-card" appScrollReveal animation="slide-up" [delay]="100">
-              <div class="value-icon">🎁</div>
+            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="600">
+              <div class="luxury-icon-wrapper">
+                <span class="luxury-icon">🎁</span>
+              </div>
               <h3>Regalos de Alta Gama</h3>
-              <p>Nuestros formatos individuales son la pieza central perfecta para cualquier obsequio sofisticado</p>
+              <div class="luxury-divider"></div>
+              <p>Formatos individuales diseñados para ser la pieza central perfecta para cualquier obsequio sofisticado.</p>
             </div>
-            <div class="value-card" appScrollReveal animation="slide-up" [delay]="200">
-              <div class="value-icon">✨</div>
-              <h3>Portabilidad Creativa</h3>
-              <p>Nuestros envases innovadores permiten llevar la elegancia a cualquier lugar</p>
+            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="750">
+              <div class="luxury-icon-wrapper">
+                <span class="luxury-icon">✨</span>
+              </div>
+              <h3>Elegancia Portátil</h3>
+              <div class="luxury-divider"></div>
+              <p>Envases innovadores que permiten llevar la sofisticación de nuestra repostería a cualquier rincón.</p>
             </div>
-            <div class="value-card" appScrollReveal animation="slide-up" [delay]="300">
-              <div class="value-icon">♻️</div>
+            <div class="luxury-card" appScrollReveal animation="slide-up" [delay]="900">
+              <div class="luxury-icon-wrapper">
+                <span class="luxury-icon">♻️</span>
+              </div>
               <h3>Compromiso Sustentable</h3>
-              <p>Moldes reutilizables y materiales eco-conscientes que reflejan nuestro amor por la naturaleza</p>
+              <div class="luxury-divider"></div>
+              <p>Materiales eco-conscientes y moldes reutilizables que reflejan nuestro profundo respeto por la naturaleza.</p>
             </div>
           </div>
         </div>
@@ -440,8 +457,13 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       transform: scale(1.3);
     }
 
-    /* Responsive */
+    /* Responsive Optimizado */
     @media (max-width: 1024px) {
+      .hero-section {
+        min-height: 600px;
+        padding: var(--spacing-xl) var(--spacing-md);
+      }
+
       .hero-slide {
         grid-template-columns: 1fr;
         gap: var(--spacing-xl);
@@ -466,41 +488,91 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
 
       .hero-visual-split {
         height: auto;
-        padding: var(--spacing-xl) 0;
+        padding: var(--spacing-md) 0;
       }
 
       .hero-image-frame {
-        width: 300px;
-        height: 420px;
+        width: 320px;
+        height: 450px;
       }
     }
 
     @media (max-width: 768px) {
+      .hero-section {
+        min-height: auto;
+        padding-top: var(--spacing-2xl);
+      }
+
+      .hero-slide {
+        display: flex;
+        flex-direction: column-reverse; /* Imagen arriba, texto abajo para impacto visual */
+        gap: var(--spacing-lg);
+      }
+
       .hero-title-split {
-        font-size: 2rem; /* Más pequeño para móviles */
+        font-size: 2.25rem;
+        line-height: 1.2;
+        margin-bottom: var(--spacing-md);
       }
-      .hero-actions {
-        flex-direction: column;
-        width: 100%;
-        gap: var(--spacing-md);
+
+      .hero-subtitle-split {
+        font-size: 1rem;
+        margin-bottom: var(--spacing-lg);
+        max-width: 100%;
       }
-      .hero-actions .btn {
-        width: 100%;
+
+      .hero-visual-split {
+        height: 380px;
       }
+
       .hero-image-frame {
+        width: 260px;
+        height: 340px;
+        border-radius: 130px;
+        transform: rotate(0deg); /* Más limpio en móvil */
+      }
+
+      .hero-actions {
+        flex-direction: row; /* Botones uno al lado del otro */
         width: 100%;
-        max-width: 280px;
-        height: 350px;
+        max-width: 400px;
+        margin: 0 auto;
+        gap: var(--spacing-sm);
+      }
+
+      .hero-actions .btn {
+        flex: 1;
+        padding: 0.8rem 1rem;
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+
+      .nav-arrow {
+        display: none; /* Simplificamos controles en móvil */
       }
     }
 
     @media (max-width: 480px) {
       .hero-title-split {
-        font-size: 1.75rem;
+        font-size: 1.85rem;
       }
+
+      .hero-visual-split {
+        height: 320px;
+      }
+
       .hero-image-frame {
-        max-width: 250px;
+        width: 220px;
         height: 300px;
+      }
+
+      .hero-actions {
+        gap: var(--spacing-xs);
+      }
+      
+      .hero-actions .btn {
+        padding: 0.8rem 0.5rem;
+        font-size: 0.8rem;
       }
     }
 
@@ -516,81 +588,220 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
 
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: var(--spacing-lg);
     }
 
-    .category-card {
-      background: var(--color-white);
-      padding: var(--spacing-xl);
+    .category-card-v2 {
+      position: relative;
       border-radius: var(--border-radius-lg);
-      text-align: center;
-      box-shadow: var(--shadow-sm);
-      transition: transform var(--transition-slow), box-shadow var(--transition-slow);
-    }
-
-    .category-card:hover {
-      transform: translateY(-8px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .category-icon {
-      font-size: 3rem;
-      margin-bottom: var(--spacing-md);
-      transition: transform var(--transition-slow);
-    }
-
-    .category-card:hover .category-icon {
-      transform: scale(1.1) rotate(5deg);
-    }
-
-    .category-card h3 {
-      font-family: var(--font-serif);
-      font-size: 1.25rem;
-      color: var(--color-brown);
+      overflow: hidden;
+      aspect-ratio: 1; /* Cuadrado perfecto como los productos */
       text-decoration: none;
+      box-shadow: var(--shadow-md);
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      will-change: transform, box-shadow, opacity;
     }
 
-    /* Valores */
-    .values {
-      padding: var(--spacing-3xl) 0;
+    .category-card-v2:hover {
+      transform: translateY(-12px) scale(1.02) translateZ(0);
+      box-shadow: var(--shadow-lg);
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
+                  box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    /* Ajuste para que la transición de regreso del hover también sea suave */
+    .category-card-v2:not(:hover) {
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .category-img-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
       background: var(--color-cream-dark);
     }
 
-    .section-subtitle {
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto var(--spacing-xl);
-      color: var(--color-gray);
+    .category-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s ease;
     }
 
-    .values-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: var(--spacing-lg);
-    }
-
-    .value-card {
-      text-align: center;
-      padding: var(--spacing-lg);
-      background: transparent;
-      border-radius: var(--border-radius-md);
-      transition: transform var(--transition-slow), background-color var(--transition-slow);
-    }
-
-    .value-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.5);
-    }
-
-    .value-icon {
-      font-size: 2.5rem;
-      margin-bottom: var(--spacing-md);
-      transition: transform var(--transition-slow);
-    }
-
-    .value-card:hover .value-icon {
+    .category-card-v2:hover .category-img-container img {
       transform: scale(1.1);
+    }
+
+    .category-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(120, 0, 0, 0.85), transparent 60%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: var(--spacing-lg);
+      transition: background 0.4s ease;
+    }
+
+    .category-card-v2:hover .category-overlay {
+      background: linear-gradient(to top, rgba(120, 0, 0, 0.95), transparent 45%);
+    }
+
+    .category-info h3 {
+      color: var(--color-white);
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing-xs);
+      font-weight: 700;
+    }
+
+    .category-btn {
+      color: var(--color-gold);
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      opacity: 0.9;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .category-card-v2:hover .category-btn {
+      transform: translateX(5px);
+    }
+
+    /* Valores - Luxury Experience Redesign */
+    .luxury-experience {
+      padding: var(--spacing-3xl) 0;
+      background: linear-gradient(to bottom, var(--color-base), var(--color-cream-dark));
+      position: relative;
+    }
+
+    .luxury-header {
+      text-align: center;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .luxury-eyebrow {
+      display: block;
+      color: var(--color-accent);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .luxury-title {
+      font-family: var(--font-serif);
+      font-size: 3rem;
+      color: var(--color-secondary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .luxury-subtitle {
+      max-width: 700px;
+      margin: 0 auto;
+      color: var(--color-gray);
+      font-size: 1.15rem;
+      line-height: 1.6;
+    }
+
+    .luxury-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--spacing-xl);
+    }
+
+    .luxury-card {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(120, 0, 0, 0.05);
+      padding: var(--spacing-xl) var(--spacing-lg);
+      border-radius: var(--border-radius-lg);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      will-change: transform, box-shadow, opacity;
+    }
+
+    .luxury-card:hover {
+      transform: translateY(-15px) translateZ(0);
+      background: var(--color-white);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-gold);
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
+                  box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+                  background-color 0.4s ease,
+                  border-color 0.4s ease;
+    }
+
+    .luxury-card:not(:hover) {
+      transition: transform 0.6s ease, box-shadow 0.6s ease, background-color 0.6s ease;
+    }
+
+    .luxury-icon-wrapper {
+      width: 70px;
+      height: 70px;
+      background: var(--color-white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--spacing-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--color-gold-light);
+      transition: all var(--transition-slow);
+    }
+
+    .luxury-card:hover .luxury-icon-wrapper {
+      background: var(--color-gold);
+      transform: scale(1.1);
+    }
+
+    .luxury-icon {
+      font-size: 2rem;
+    }
+
+    .luxury-card h3 {
+      font-family: var(--font-serif);
+      color: var(--color-brown);
+      font-size: 1.4rem;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .luxury-divider {
+      width: 40px;
+      height: 2px;
+      background: var(--color-gold);
+      margin-bottom: var(--spacing-md);
+      transition: width 0.4s ease;
+    }
+
+    .luxury-card:hover .luxury-divider {
+      width: 80px;
+    }
+
+    .luxury-card p {
+      font-size: 0.95rem;
+      color: var(--color-gray);
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .luxury-title {
+        font-size: 2rem;
+      }
+      
+      .luxury-card {
+        padding: var(--spacing-lg) var(--spacing-md);
+      }
     }
 
     .value-card h3 {
@@ -680,12 +891,20 @@ import { ScrollRevealDirective } from '../../shared/directives/scroll-reveal.dir
       }
 
       .category-grid {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         gap: var(--spacing-md);
       }
 
-      .category-card {
-        padding: var(--spacing-lg) var(--spacing-sm);
+      .category-info h3 {
+        font-size: 1.1rem;
+      }
+
+      .category-overlay {
+        padding: var(--spacing-md);
+      }
+
+      .category-btn {
+        font-size: 0.75rem;
       }
 
       .hero-carousel .carousel-content {
@@ -707,6 +926,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private cartService = inject(CartService);
 
   featuredProducts = signal<Product[]>([]);
+  homeCategories = signal<any[]>([]);
   heroSlides = signal<HeroSlide[]>([]);
   currentSlide = signal(0);
   isLoading = signal(true);
@@ -721,6 +941,22 @@ export class HomeComponent implements OnInit, OnDestroy {
       ]);
       this.featuredProducts.set(products.slice(0, 6));
       this.heroSlides.set(slides);
+
+      // Configurar categorías dinámicamente con imágenes de productos
+      const cats = [
+        { id: 'cups', name: 'Vasitos Gourmet', delay: 200 },
+        { id: 'mini-cakes', name: 'Mini Tartas', delay: 400 },
+        { id: 'molds', name: 'Ediciones Especiales', delay: 600 }
+      ];
+
+      const categoryData = cats.map(cat => {
+        const product = products.find(p => p.category === cat.id && p.image_url);
+        return {
+          ...cat,
+          image: product?.image_url || 'assets/logo.png' // Fallback al logo si no hay imagen
+        };
+      });
+      this.homeCategories.set(categoryData);
 
       // Preload images
       this.preloadImages(slides);
