@@ -32,7 +32,16 @@ export const routes: Routes = [
   {
   path: 'nosotros',
   loadComponent: () => import('./features/nosotros/nosotros.component').then(m => m.NosotrosComponent)
-  },  {
+  },
+  {
+    path: 'privacidad',
+    loadComponent: () => import('./features/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent)
+  },
+  {
+    path: 'aviso-legal',
+    loadComponent: () => import('./features/legal-notice/legal-notice.component').then(m => m.LegalNoticeComponent)
+  },
+  {
     path: 'admin',
     loadComponent: () => import('./features/admin/admin.component').then(m => m.AdminComponent)
   },
