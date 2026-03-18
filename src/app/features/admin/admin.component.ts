@@ -847,7 +847,7 @@ export class AdminComponent implements OnInit {
       console.log('Orders loaded:', orders.length, 'orders');
       
       console.log('Loading products...');
-      const products = await this.supabase.getProducts();
+      const products = await this.supabase.getActiveProducts();
       console.log('Products loaded:', products.length, 'products');
       
       const sales = await this.supabase.getTotalSales();
@@ -1077,8 +1077,13 @@ export class AdminComponent implements OnInit {
 
   async deleteProduct(id: string) {
     if (confirm('¿Estás seguro de eliminar este producto?')) {
-      await this.supabase.deleteProduct(id);
-      await this.loadData();
+      try {
+        await this.supabase.deleteProduct(id);
+        await this.loadData();
+      } catch (error: any) {
+        console.error('Error deleting product:', error);
+        alert('Error al eliminar el producto: ' + error.message);
+      }
     }
   }
 }

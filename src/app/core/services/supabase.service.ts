@@ -90,11 +90,11 @@ export class SupabaseService {
     return data;
   }
 
-  // Admin: Delete product
+  // Admin: Delete product (Soft Delete)
   async deleteProduct(id: string): Promise<void> {
     const { error } = await this.client
       .from('products')
-      .delete()
+      .update({ is_active: false })
       .eq('id', id);
     
     if (error) throw error;
