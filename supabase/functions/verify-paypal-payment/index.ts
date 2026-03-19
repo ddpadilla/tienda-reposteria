@@ -4,13 +4,15 @@ Deno.serve(async (req) => {
   const PAYPAL_CLIENT_ID = Deno.env.get('PAYPAL_CLIENT_ID');
   const PAYPAL_CLIENT_SECRET = Deno.env.get('PAYPAL_CLIENT_SECRET');
 
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'apikey, X-Client-Info, Content-Type, Authorization, Accept, Accept-Language, X-Authorization',
+  };
+
   if (req.method === 'OPTIONS') {
     return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
+      headers: corsHeaders,
     });
   }
 
@@ -20,13 +22,13 @@ Deno.serve(async (req) => {
     if (!orderId || !customerName || !customerEmail || !customerPhone || !totalHNL || !items || items.length === 0) {
       return new Response(
         JSON.stringify({ error: 'Faltan datos requeridos' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Obtener access token de PayPal
+    // Obtener access token de PayPal (MODO LIVE)
     const auth = btoa(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`);
-    const tokenResponse = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
+    const tokenResponse = await fetch('https://api-m.paypal.com/v1/oauth2/token', {
       method: 'POST',
       headers: {
         'Authorization': `Basic ${auth}`,
@@ -40,12 +42,12 @@ Deno.serve(async (req) => {
     if (!tokenData.access_token) {
       return new Response(
         JSON.stringify({ error: 'Error al autenticar con PayPal' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Verificar el pago en PayPal
-    const captureResponse = await fetch(`https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderId}/capture`, {
+    // Verificar el pago en PayPal (MODO LIVE)
+    const captureResponse = await fetch(`https://api-m.paypal.com/v2/checkout/orders/${orderId}/capture`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${tokenData.access_token}`,
@@ -58,7 +60,7 @@ Deno.serve(async (req) => {
     if (captureData.status !== 'COMPLETED') {
       return new Response(
         JSON.stringify({ error: 'Pago no completado', status: captureData.status }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -87,7 +89,7 @@ Deno.serve(async (req) => {
       const errorText = await orderResponse.text();
       return new Response(
         JSON.stringify({ error: 'Error al crear orden', details: errorText }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
@@ -128,13 +130,13 @@ Deno.serve(async (req) => {
         orderId: orderIdSupabase,
         paypalStatus: captureData.status 
       }),
-      { headers: { 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
     return new Response(
       JSON.stringify({ error: error.message }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });

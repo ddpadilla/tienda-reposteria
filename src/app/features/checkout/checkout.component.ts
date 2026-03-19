@@ -190,21 +190,26 @@ declare var paypal: any;
                     </div>
                   }
 
-                  @if (paymentMethod() === 'paypal') {
-                    <div class="paypal-container-wrapper">
-                      @if (!paypalLoaded()) {
-                        <div class="paypal-placeholder">
-                          <p>Cargando PayPal...</p>
-                        </div>
+                  <div class="paypal-container-wrapper" [style.display]="paymentMethod() === 'paypal' ? 'block' : 'none'">
+                    @if (!paypalLoaded()) {
+                      <div class="paypal-placeholder">
+                        <p>Cargando PayPal...</p>
+                      </div>
+                    }
+                    
+                    <div class="paypal-button-area" style="position: relative;">
+                      @if (!isFormValid()) {
+                        <div class="paypal-disabled-overlay" (click)="handleDisabledPayPalClick()"></div>
                       }
-                      <div id="paypal-button-container"></div>
-                      @if (paypalLoaded() === false) {
-                        <div class="paypal-error">
-                          <p>Error al cargar PayPal. Por favor intenta con otro método de pago.</p>
-                        </div>
-                      }
+                      <div id="paypal-button-container" [class.is-invalid]="!isFormValid()"></div>
                     </div>
-                  }
+
+                    @if (paypalLoaded() === false) {
+                      <div class="paypal-error">
+                        <p>Error al cargar PayPal. Por favor intenta con otro método de pago.</p>
+                      </div>
+                    }
+                  </div>
                 </div>
               </section>
             </div>
@@ -503,8 +508,25 @@ declare var paypal: any;
       border: 1px solid var(--color-error);
     }
 
+    .paypal-button-area {
+      position: relative;
+    }
+
+    .paypal-disabled-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.4);
+      cursor: not-allowed;
+    }
+
     #paypal-button-container {
       min-height: 50px;
+      transition: opacity 0.3s ease;
+    }
+
+    #paypal-button-container.is-invalid {
+      opacity: 0.5;
     }
 
     /* Order Summary */
@@ -680,6 +702,11 @@ export class CheckoutComponent implements OnInit {
              this.customer.address);
   }
 
+  handleDisabledPayPalClick() {
+    this.submitted.set(true);
+    this.formError.set('Por favor completa todos los campos del formulario antes de proceder al pago.');
+  }
+
   getEmailError(): string {
     if (!this.customer.email) return 'El correo es requerido';
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -730,30 +757,30 @@ export class CheckoutComponent implements OnInit {
         unitPrice: item.product.price_hnl
       }));
 
-      const response = await fetch(
-        `https://${environment.supabaseUrl}/functions/v1/verify-paypal-payment`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            orderId,
-            customerName: this.customer.name,
-            customerEmail: this.customer.email,
-            customerPhone: this.customer.phone,
-            deliveryAddress: this.customer.address,
-            totalHNL: this.cartService.totalHNL(),
-            notes: this.notes || null,
-            items
-          })
+      const { data: result, error: invokeError } = await this.supabase.supabase.functions.invoke('verify-paypal-payment', {
+        body: {
+          orderId,
+          customerName: this.customer.name,
+          customerEmail: this.customer.email,
+          customerPhone: this.customer.phone,
+          deliveryAddress: this.customer.address,
+          totalHNL: this.cartService.totalHNL(),
+          notes: this.notes || null,
+          items
+        },
+        headers: {
+          Authorization: ''
         }
-      );
+      });
 
-      const result = await response.json();
+      if (invokeError) {
+        throw new Error(invokeError.message || 'Error de conexión con el servidor.');
+      }
 
-      if (!response.ok || result.error) {
-        throw new Error(result.error || 'Error al procesar pago');
+      if (!result || result.error) {
+        const errorMsg = result?.error || result?.details || 'Error desconocido al procesar el pago';
+        this.formError.set('Error: ' + errorMsg);
+        throw new Error(errorMsg);
       }
 
       this.cartService.clearCart();
